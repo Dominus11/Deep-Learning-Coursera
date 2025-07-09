@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "65b08c4caa74535f",
@@ -168,8 +169,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b82f70ffde317007",
+  "active": "c5360a0aa5754d3c",
   "lastOpenFiles": [
+    "1 - NNs and Deep Learning/Week 3 - Deep NN Training.ipynb",
+    "1 - NNs and Deep Learning/Week 3 - Deep NN Components.ipynb",
+    "1 - NNs and Deep Learning/Week 3 - Deep_NN_Training.ipynb",
+    "1 - NNs and Deep Learning/Week 3 - Deep_NN_Components.ipynb",
+    "1 - NNs and Deep Learning/Deep_NN_Components.ipynb",
+    "1 - NNs and Deep Learning/Week 2 - One Layer Planar Classification.ipynb",
     "LICENSE",
     "README.md",
     "1 - NNs and Deep Learning/Week 1 - Logistic Regression.ipynb",

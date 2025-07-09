@@ -112,10 +112,80 @@ By traversing the graph's edges in alternate directions, you can perform:
 
 # Week 3: Shallow NNs
 
-### Terminology
-
 ### Notes
 
+#### Architecture
+
+Neural networks are comprised of three types of layer:
+- **Input Layer:** One layer where the features/input data are passed to the network
+- **Hidden Layer:** There may be as many of these as the architect deems necessary. These perform the main bulk of 'processing' in the neural network, taking in the results of the preceding layer, applying _weights, biases_ and an _activation function_ to the inputs to each neuron. 
+- **Output Layer:** Where the results of the neural network are provided. These also have weights, biases and activations. 
+
+Note: When counting layers we (reasonably) don't count the input layer. Or we can 0-index our counting to include it, they're equivalent. 
+
+For each layer $i$ consisting of $L_i$ neurons, then for each neuron, $n$, the computation goes:
+- $z_i = \sigma(w_i^Tz_{i-1} + b)$
+- Here we assume that $\sigma$ is an activation function applied element-wise
+- We also assume that:
+	- $w_i$ is a weights matrix (alternatively viewed as a layer of a tensor) where $w_{ijk}$ is the weight of the  $j$-th input in $z_{i-1}$ that contributes to the $k$-th item in $z_i$.  
+	- $b$ is a biases vector which adds a linear bias to the contributions of each neuron to the activation. 
+
+The notational fluff starts to complicate the idea, but provides a lens into vectorising the operations by converting it to matrix and vector operations (which, of course, can be parallelised) by considering these linear transformations, pre-activation, as matrix operations. 
+
+You can also _parallelise across multiple examples_, allowing you to drastically reduce training times, by compacting your input data into a matrix rather than multiple distinct vectors, and then using a similar intuition as one might when performing broadcasting for similar dimension arrays in Numpy (at least for the biases, since that would take less storage than homogeneous coordinates). 
+
+Neural networks were originally analogised to the brain, where neurons only transmit a signal if they are provided with sufficient input to reach a certain threshold. We mimic this effect using an _activation function_. The more fitting idea is the simple fact that most real-world data is non-linear, so you need to introduce non-linear functions in order to capture input-to-output mappings that have sufficient expressivity. 
+
+Some considerations about activations include:
+- $\tanh$ is better than sigmoid due to the effect of centring the values on 0, except for binary classification at the output layer.  
+- Different layers may have different activation functions!
+- Both $\tanh$ and sigmoid fall short since you lose sensitivity for large values (vanishing gradient problem), which is where one may choose to use ReLU (which is normally quite optimal). 
+
+For more on activation functions:
+- [Datacamp Activation Functions](https://www.datacamp.com/tutorial/introduction-to-activation-functions-in-neural-networks)
+- [v7 Blog Activation Functions](https://www.v7labs.com/blog/neural-networks-activation-functions)
+
+
+_Notes on initialisation:_
+- Weights in a neural network need to be initialised to non-zero values since otherwise you will be locked into 0 gradients for each back propagation step. 
+
+#### Training
+
+I will approach this from a slightly more mathematical lens since this is what I personally was seeking from the course. 
+
+We've analysed forward propagation and its vectorization by reducing it to matrix operations in the previous section. To summarise, the recursive formulae are here:
+
+$$\begin{align*}
+a^{[1]} = \sigma^{[1]}(w^{[1]}X + b^{[1]}) \\
+a^{[n]} = \sigma^{[n]}(w^{[n-1]}X + b^{[n]}) \\
+\end{align*}$$
+
+You may then terminate this at any point, depending on the chosen depth of your neural network. 
+
+For back-propagation, we need to once again perform _lots_ of chain rule, but this too can be vectorized by making a computation graph that works on tensor objects, and by considering the Jacobian matrix of each layer, since you can treat each layer as a vector-valued function, and then multiply the Jacobians to implement the chain rule. Unfortunately I feel compelled to actually explain this to the poor soul who's reading this as a useful resource, so here you go :D. 
 
 
 # Week 4:  Deep NNs
+
+### Terminology
+
+**Parameters:** Values that the model needs to learn in order to make predictions
+**Hyperparameters:** Values that we control in order to optimise how effectively the model learns. They might include:
+- Learning Rate, $\alpha$ 
+- Optimiser algorithm
+- Number of training iterations
+- Number of hidden layers, $L$
+- Number of hidden units, $n^{[l]}$
+- Activation functions at each layer
+
+### Notes
+
+As one may intuitively expect, depth allows us to capture more expressivity and complexity in the functions that can be learned by our model, by introducing a deeper hierarchy of information that can be learned/composed between layers
+- Convolutional Neural Networks: Edges -> Features(eyes, mouth, etc) -> Faces
+- Audio: Low level audio waveforms -> Phonemes -> Words -> Sentences/Phrases
+
+You may also think about it in terms of circuit theory. The informal result is that a small (low number of neurons per layer) $L$-layer deep net can compute functions that would take shallower networks exponentially more hidden units to compute.
+
+Otherwise, the function of the network's forward and backward propagation is identical to how we described it before, in terms of the recursive definition of forward propagation, and in terms of how back-propagation requires you to recurse through the computation graph/tree of the neural network using the chain rule. 
+
+Applied deep learning is empirical. This means that you will need to go through the process of tweaking your hyperparameters in order to find the point that minimises your cost, $\mathcal{C}$. There are slightly more systematic ways of doing this, but for now you just have to try it. 
