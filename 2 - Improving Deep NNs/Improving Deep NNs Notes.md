@@ -107,6 +107,140 @@ You want to perform _gradient checking_ to verify your backpropagation implement
 
 # Week 2 - Optimisation Algorithms
 
+### Gradient Descent and Batches
+
+In traditional gradient descent, we've already shown you can efficiently compute across $m$ examples, to capture your entire training set. But if your training set is absurdly large (to the point that even vectorization doesn't fully stem the compute time), you might want to try to speed up the gradient descent.
+
+**Mini-Batch Gradient Descent:** Take small subsets of your training set and allow gradient descent to occur from training on subsets, rather than waiting for your entire training set to be processed. 
+
+```python
+
+parameters = initialise_parameters()
+epochs = ...
+n_batches = ...
+batches = split_data(train_set, n_batches)
+
+for epoch in range(epochs):
+	for batch in batches:
+		cache = forward_propagation(data[b])
+		cost = compute_cost(cache)
+		grads = backward_propagation(cache)
+		parameters -= lr*grads
+```
+
+The _epochs_ and _number of mini batches_ are now new hyperparameters for you to tune. 
+
+You'll observe in training, that there will now be a downwards trend with significantly more noise to it, since you're effectively exposing it to new data which the model might not yet be proficient in handling. You will want to be wise in choosing your mini-batch size however, so that you can maximise the speed up. 
+
+- **Batch Gradient Descent:** When the mini-batch size is equal to the size of the entire training set. This takes too long per iteration, given a very large training set. 
+- **Stochastic Gradient Descent:** When the mini-batch size is 1, and every example is its own batch. This has the most noise to it, and will never converge due to that effect. You can mitigate the noise with a smaller learning rate, but you lose all the speedup from vectorisation. 
+
+These two extremes are clearly unsuitable, so you want something in the middle. If your training set is small then you can opt for batch descent, but otherwise, it is advisable to pick a batch size which is a power of 2, which fits in GPU memory. 
+
+### Exponentially Weighted Moving Averages 
+
+This might be familiar if you've looked at implementations of the _STRF_ scheduling algorithm. The general premise is to take measurements at discrete time steps and combine the old average with the new incoming data in the following fashion:
+
+Let $V_t$ be the average at any time increment $t$, and $\theta_t$ be the incoming data at timestep $t$. Then we define the exponentially weighted average as:
+
+$$V_t = \beta V_{t-1} + (1-\beta)\theta_t$$
+You select $\beta$ depending on how you judge the relative importance of the old data against the new data. You can interpret $V_t$ as approximately averaging over the last $\frac{1}{1-\beta}$ measurements. 
+
+Let's think about this. We can expand the recursive definition of the formula (initialised with some value $V_0$) to yield the following:
+
+$$V_t = \beta^{t+1}V_0 + \sum_{i=0}^{t-1} \beta^i \ (1-\beta) \ \theta_{t-i}$$
+
+We can consider each piece of new information from timestep $t-k$ as having weight $w_k$. Evidently from the above formula, we observe that $w_k = \beta^k (1-\beta)$. We can find the average lag $L$ for a piece of information contributing to the mean by the following formula:
+
+$$\begin{align*}
+\mathbb{E}[L] &= \sum_{k=0}^{\infty} k\cdot w_k \\
+&= \sum_{k=0}^{\infty} k\cdot (1-\beta)\beta^k \\
+&= \frac{\beta}{1-\beta}
+\end{align*}$$
+
+You can consider this mean in relation to the variable $\text{Geo}(1-\beta) - 1$, allowing you to intuit this as a system which forgets with probability $1 - \beta$. The last remembered data point would be $x_{t-K}, K \sim \text{Geo}(1-\beta) - 1$. 
+
+At this point, I confess that I'm trying hard not to overthink the off-by-ones, and I would recommend to a less qualified reader to do the same, this off-by-one interpretation maintains the notion of the geometric distribution as the number of trials until success, rather than counting the number of failures until success. 
+
+Now to find the effective window this covers, we shall consider the information as undergoing exponential decay in weight. We shall say that a piece of information is significant if its current weight, $w_k$ remains above $\frac{1-\beta}{e}$. 
+
+$$\begin{align*} 
+(1-\beta) \beta^k &= \frac{1}{e} (1-\beta) \\
+\beta^k &= \frac{1}{e} \\
+k \ln \beta &= -1 \\
+k &= \frac{-1}{\ln \beta} \\
+k &\approx \frac{1}{1-\beta} \; \; \text{[By Maclaurin Expansion]}
+\end{align*}$$
+Thus, the lag $k$ within which a piece of information remains significant is as given above, giving our proposed 'viewing window'. 
+
+When using exponential averaging, you run into an error for early iterations, whereby if the value of $1- \beta$ is small, then you'll actually run into the issue that it will reduce your values and introduce a systematic underestimate of early values. To rectify this, you could choose to output $\frac{V_t}{1-\beta^t}$ on each iteration, which will turn it into a standard average of the incoming $\theta_i$s. Note, however, that $V_t$ still obeys the proposed formula, you're simply applying a correction filter before returning it. 
+
+### Momentum
+
+**Momentum:** Take an exponentially weighted average of your gradients, and use this to update your parameters instead. 
+
+Regular gradient descent slows you down since you run into the issue of your path being vaguely oscillating, preventing you from using a high learning rate since you run the risk of diverging on a given oscillation.  
+
+Momentum will help you because by averaging out directions, it dampens any oscillations in the path, meaning that you converge along a more direct path to your minimum. The 'random walk'-like path you would've taken now has far less variance. 
+
+A nice analogy (for those with a mind for physics) is to imagine a ball rolling down a convex surface. If we consider the term:
+
+$$V_{dW,t} = \beta V_{dW, t-1} + (1-\beta)dW$$
+We can consider this term as being the resultant acceleration on the ball. The first half is the current velocity, limited by some amount of friction, and the second term is the acceleration due to gravity at that point on the surface. 
+
+$\beta = 0.9$ is a common choice for the hyperparameter, but you might need to re-tune $\alpha$ in response to any changes of $\beta$.
+
+### RMSProp
+
+**RMSProp:** This is an alternative optimisation technique to momentum. It achieves this with the following set of equations to maintain a moving average of the squared gradients. 
+
+$$\begin{align*}
+
+&s_{dW,t} = \beta s_{dW,t-1} + (1-\beta)dW^2 \\
+
+&w \leftarrow w - \alpha \frac{dW}{\sqrt{s_{dW,t} + \epsilon}} \\
+
+\end{align*}$$
+**NB:** The equations given above are only adjusting the weight, but the biases must also be updated too. 
+
+This once again has a similar effect to dampening the oscillations as last time:
+- If the gradients are large, such as due to oscillations,  then the moving average will be large, meaning that you divide the calculated gradient by a large number, dampening these oscillations. 
+- If gradients are small, then then you divide the gradient by a very small moving average drastically accelerating the learning. 
+
+You need the little $\epsilon$ term to prevent a potential divide-by-zero error. 
+
+### Adam 
+
+**Adam:** Adaptive Moment Estimation. Takes the best of both worlds from momentum (the first moment) and RMSProp (the second moment) and combines them to achieve a well-generalising optimisation algorithm. 
+
+We now calculate $V_{d\theta,t}$ and $s_{d\theta,t}$,  _under bias correction_. We then update under the parameters $\theta$ under the formula:
+
+$$ \theta \leftarrow \theta - \alpha \frac{V_{d\theta}} { \sqrt{s_{d\theta} + \epsilon}}$$
+We note the hyperparameters we have here:
+- $\alpha$, learning rate. This **definitely** needs tuning. 
+- $\beta_1 (= 0.9)$. Used to calculate $V_{d\theta,t}$ 
+- $\beta_2 (=0.999)$. Used to calculate $s_{d\theta ,t}$. 
+- $\epsilon = 10^{-8}$. 
+
+You could tune the $\beta_i$s, but it's not really that important. You also don't necessarily need to tune $\epsilon$. 
+
+### Learning Rate Decay
+
+This is motivated by the desire to ensure better convergence on the exact minimum, rather than bouncing around the minimum while never reaching it. As you get closer to the minimum (your gradients get smaller, or more training iterations pass), you increase the resolution with which you traverse the loss surface, allowing you to more finely reach the minimum. 
+
+There are a number of ways of implementing this, such as:
+
+- _Inverse decay_ $$\alpha = \frac{1}{1 + \lambda n_e}\alpha_0$$
+- _Exponential Decay_ $$\alpha = \lambda^{n_e}\alpha_0$$
+- _Inverse Root_
+- _Discrete Staircase_
+- _Manual Decay_. This is where you, the scientist, manually interject and reset the learning rate as you please. The use context is when you're training for hours or even days, across a small number of models. 
+
+In all cases, we have:
+	- $\lambda$: The decay rate you choose
+	- $n_e$: The epoch number you're currently on
+	- $\alpha_0$: The initial learning rate.
+
 # Week 3 - Hyperparameter Tuning + Batch Normalisation
 
 This week technically also explores TensorFlow but I don't personally see the pertinence to include code snippets when you'll learn how to use it in the programming assignments. 
