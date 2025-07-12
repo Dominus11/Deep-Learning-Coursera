@@ -243,4 +243,90 @@ In all cases, we have:
 
 # Week 3 - Hyperparameter Tuning + Batch Normalisation
 
-This week technically also explores TensorFlow but I don't personally see the pertinence to include code snippets when you'll learn how to use it in the programming assignments. 
+This week technically also explores TensorFlow but I don't personally see the pertinence to include code snippets or notes when you'll learn how to use it in the programming assignments, and can have access to the docs. 
+
+### Hyperparameter Tuning
+
+There is a hierarchy of importance regarding which hyperparameters need tuning, though there are many varieties of intuition on which ones are important to explore. Andrew suggests:
+- Learning Rate
+- $\beta$ in momentum, Hidden Units, Mini-Batch Size
+- Layers and Learning Rate Decay (method + decay rate)
+
+In early machine learning, _systematic grid sampling_ used to be used, which certainly makes sense, but is highly inefficient, particularly when you have a high number of hyperparameters. Instead, pick a certain number of samples, and _randomly sample the parameters on each go_ . With the grid method, you'll actually have sampled less values of each hyperparameter with the same number of trials, which is clearly a less rich exploration of the hyperparameter space. 
+
+You should also consider a _coarse-to-fine_ search methodology, increasing the resolution of your search as you gain more insight to where the optimal set of hyperparameters might be. 
+
+There is also a problem of _picking the appropriate scale_ to search for hyperparameters on, since you don't want to waste resources unevenly searching the range of values:
+- For $n^{[l]}$ a uniform linear scale would be appropriate
+- For $\alpha$ or $1-\beta$, which can vary on the order of magnitude, and are very sensitive hyperparameters, you would want to sample along a logarithmic scale and then pick that. 
+
+You should be considerate of the fact that due to changes in your workflow, your hyperparameters could go stale. It's good practice to re-test them every few months or so. Pick an appropriate scale :). 
+
+There are two big schools of thought on model-training, which are restricted by your available computational resources:
+- Pandas: Babysit one model at a time, searching hyperparameter space sequentially until you reach a good one.
+- Caviar: Train loadssss of models in parallel. And then see which regions of hyperparameters do the best! 
+
+### Batch Normalisation
+
+**Batch Normalisation:** A technique to improve the stability of a neural network, and to accelerate training by making the hyperparameter search easier. 
+
+Suppose we're inspecting some layer $l$ in a deep neural network. Consider the linear values (pre-activation) at that layer. There is some debate about whether we should do this pre or post activation, but we shall adopt the pre-activation school of thought for now. We shall take:
+
+$$\begin{align*}
+&\mu = \frac{1}{m}\sum_i z^{(i)} \; \;   \; \; 
+&\sigma^2 = \frac{1}{m}\sum_i (z^{(i)} - \mu)^2 \\
+\end{align*}$$
+
+$$\begin{align*} 
+z_{\text{norm}}^{(i)} &= \frac{z^{(i)} - \mu}{\sqrt{\sigma^2 + \epsilon}} \\
+\\
+\tilde{z}_{\text{norm}}^{(i)} &= \gamma z_{\text{norm}}^{(i)} + \beta
+\end{align*}$$
+
+The reason we perform the affine transformation is because with certain activation functions, centring the data strictly around 0 and having too small a variance, might not allow us to maximally make use of the non-linearity, so we can increase the variance or re-centre the data as desired. **NB:** $\beta,\gamma$ are learnable vector parameters for the model.
+
+When using batch-norm on a layer, we can eliminate the bias parameter for that layer, since the normalised version will be re-centred on 0, and then you can use $\beta^{[l]}$ to re-calibrate the mean. 
+
+**Covariate Shift:** The problem of a data distribution changing from training to testing/application, while the learned mapping/function stays the same, meaning that your function is not necessarily suitable to predict the new distribution. 
+
+A layer in the middle of the network receiving input from the previous layer effectively only sees the features it receives. Everything else behind it might as well be a black-box, relative to it. What happens during training, however, is that as the parameters of the black-box get optimised, there is a covariate shift in the received inputs from the previous layer. Batch normalisation reduces the coupling between the black-box and the parameters the third layer learns, since now the received data will always be constrained (slightly) by its mean and variance, thereby reducing the amount of covariate shift which can occur, by having some stability in the distribution of the output features from the previous layer. 
+
+Batch-normalisation also acts as a slight regularisation method, similar to dropout, by introducing some noise by applying the affine transformation to each hidden layer's activations. You might want to use dropout in cohesion with this. As a slight aside, regularisation effects of dropout are reduced from larger mini-batch sizes. 
+
+At test-time, you might not have mini-batches to process in parallel. You need a different way to conceive $\mu, \sigma^2$ at each layer. You normally do this by estimating them with an exponentially weighted average across mini-batches. At test-time, you use these averages 
+to fill in for the mean and variance. 
+
+### Multi-Class Classifiers
+
+Here, you want to generalise the notion of _logistic regression_ to _softmax regression_. The distinction here, hopefully trivially, is that the output layer will no no longer be one value, but instead be a $C$-vector, where $C$ is the number of classes we're trying to distinguish between. 
+
+Here, the activation at the output layer will be the softmax function, which is given by:
+
+$$\text{softmax}(z) = \frac{e^{z^{[l]}}}{\sum_{i=1}^C e^{z_i^{[l]}}}$$
+
+In other words, you normalise the output vector such that all entries sum to 1, meaning that each entry now represents the probability that a set of input features corresponds to that class. This enables you to learn more complex non-linear decision boundaries for multiple classes.
+
+Softmax is named in contrast to the "hardmax" function which places a 1 in the place of the maximum entry. It generalises the sigmoid activation function to more than 2 classes. If we briefly review the sigmoid function:
+
+$$\sigma(z) = \frac{1}{1+e^{-z}} = \frac{e^z}{e^z+1}$$
+<Insert inspection/intuition here/> 
+
+The loss function we want to use to train a softmax classifier is:
+
+$$\mathcal{L}(\hat{y},y) = -\sum_{c=1}^C y_c \log \hat{y_c}$$
+This makes sense, since to minimise the expression, the only thing that can be changed is $\hat{y}_\hat{c}$, where $\hat{c}$ is the correct identification. This turns out to be a form of maximum likelihood estimation, similar to logistic regression. We are selecting the parameters of our neural network to maximise the likelihood that we identify the input features as corresponding to class $\hat{c}$. 
+
+$\text{RTP: } \frac{\partial J}{\partial z^{[l]}} = \hat{y} - y$
+
+$$\begin{align*}
+
+\hat{y} &= \text{softmax}(z) \\ \\
+
+\frac{\partial J}{\partial z^{[l]}} &=  \frac{\partial J}{\partial \hat{y}} \cdot  \frac{\partial \hat{y}}{\partial z^{[l]}} \\
+
+\frac{\partial \hat{y}}{\partial z^{[l]}} &= \hat{y} - \hat{y}^2
+
+
+\end{align*}$$
+
+It's nice to be able to prove this result, however, it is certainly not necessary, since deep learning frameworks can do the backpropagation and auto-differentiation for you! For example, TensorFlow requires us only to specify the forward propagation step. 
