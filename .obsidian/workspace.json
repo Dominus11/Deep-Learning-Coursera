@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "9ec34efff6a5c3d3",
+        "id": "ae4832bbe98adc18",
         "type": "tabs",
         "children": [
           {
-            "id": "9a9841a8d8e8fa86",
+            "id": "21b008e952b0421c",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "65b08c4caa74535f",
@@ -169,22 +168,32 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "9a9841a8d8e8fa86",
+  "active": "21b008e952b0421c",
   "lastOpenFiles": [
-    "3 - Structuring ML Projects/Course Certificate.pdf",
-    "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
     "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
+    "4 - Convolutional Neural Networks/CNNs Notes.md",
+    "2 - Improving Deep NNs/Assignments/W1A3/images/handforward_kiank.png",
+    "2 - Improving Deep NNs/Assignments/W1A3/images/handbackward_kiank.png",
+    "2 - Improving Deep NNs/Assignments/W1A3/images/dictionary_to_vector.png",
+    "2 - Improving Deep NNs/Assignments/W1A3/images/NDgrad_kiank.png",
+    "2 - Improving Deep NNs/Assignments/W1A3/images/1Dgrad_kiank.png",
+    "2 - Improving Deep NNs/Assignments/W1A3/__pycache__/testCases.cpython-37.pyc",
+    "2 - Improving Deep NNs/Assignments/W1A3/__pycache__/public_tests.cpython-37.pyc",
+    "2 - Improving Deep NNs/Assignments/W1A3/__pycache__/gc_utils.cpython-37.pyc",
+    "2 - Improving Deep NNs/Assignments/W1A3/testCases.py",
+    "2 - Improving Deep NNs/Assignments/W1A3/public_tests.py",
+    "2 - Improving Deep NNs/Assignments/W1A3/images",
+    "2 - Improving Deep NNs/Assignments/W1A3/gc_utils.py",
+    "2 - Improving Deep NNs/Assignments/W1A3/__pycache__",
+    "2 - Improving Deep NNs/Assignments/W1A3/Gradient_Checking.ipynb",
+    "2 - Improving Deep NNs/Assignments/W1A3",
+    "2 - Improving Deep NNs/Assignments/W1A2/images/field_kiank.png",
+    "2 - Improving Deep NNs/Assignments/W3A1/images/thumbs_up.jpg",
+    "2 - Improving Deep NNs/Assignments/W3A1/images/onehot.png",
+    "2 - Improving Deep NNs/Assignments/W3A1/images/hands.png",
+    "2 - Improving Deep NNs/Assignments/W3A1/my.png",
+    "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
     "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
-    "2 - Improving Deep NNs/Course Certificate.pdf",
-    "1 - NNs and Deep Learning/Course Certificate.pdf",
-    "3 - Structuring ML Projects",
-    "2 - Improving Deep NNs/Week 3 - Tensorflow Introduction.ipynb",
-    "2 - Improving Deep NNs/Week 1 - Gradient Checking.ipynb",
-    "2 - Improving Deep NNs/Week 2 - Optimization Methods.ipynb",
-    "2 - Improving Deep NNs/Week 1 - Regularization.ipynb",
-    "2 - Improving Deep NNs/Week 1 - Gradient_Checking.ipynb",
-    "2 - Improving Deep NNs/Week 1 -Regularization.ipynb",
-    "2 - Improving Deep NNs/Week 1 - Initialization.ipynb",
     "README.md",
     "Welcome.md"
   ]

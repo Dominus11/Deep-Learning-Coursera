@@ -146,11 +146,11 @@ Let $V_t$ be the average at any time increment $t$, and $\theta_t$ be the incomi
 $$V_t = \beta V_{t-1} + (1-\beta)\theta_t$$
 You select $\beta$ depending on how you judge the relative importance of the old data against the new data. You can interpret $V_t$ as approximately averaging over the last $\frac{1}{1-\beta}$ measurements. 
 
-Let's think about this. We can expand the recursive definition of the formula (initialised with some value $V_0$) to yield the following:
+Let's dwell on this to establish some properties. We can expand the recursive definition of the formula (initialised with some value $V_0$) to yield the following:
 
 $$V_t = \beta^{t+1}V_0 + \sum_{i=0}^{t-1} \beta^i \ (1-\beta) \ \theta_{t-i}$$
 
-We can consider each piece of new information from timestep $t-k$ as having weight $w_k$. Evidently from the above formula, we observe that $w_k = \beta^k (1-\beta)$. We can find the average lag $L$ for a piece of information contributing to the mean by the following formula:
+We can consider each piece of new information from timestep $t-k$ as having weight $w_k$. Evidently from the above formula, we observe that $w_k = \beta^k (1-\beta)$. We can find the average lag, $L$, for a piece of information contributing to the mean by the following formula:
 
 $$\begin{align*}
 \mathbb{E}[L] &= \sum_{k=0}^{\infty} k\cdot w_k \\
@@ -158,22 +158,23 @@ $$\begin{align*}
 &= \frac{\beta}{1-\beta}
 \end{align*}$$
 
-You can consider this mean in relation to the variable $\text{Geo}(1-\beta) - 1$, allowing you to intuit this as a system which forgets with probability $1 - \beta$. The last remembered data point would be $x_{t-K}, K \sim \text{Geo}(1-\beta) - 1$. 
+You can consider this mean in relation to the variable $\text{Geo}(1-\beta) - 1$, allowing you to intuit this as _a system which forgets with probability $1 - \beta$_. The last remembered data point would be $x_{t-K}, K \sim \text{Geo}(1-\beta) - 1$. 
 
-At this point, I confess that I'm trying hard not to overthink the off-by-ones, and I would recommend to a less qualified reader to do the same, this off-by-one interpretation maintains the notion of the geometric distribution as the number of trials until success, rather than counting the number of failures until success. 
+Note: At this point, I confess that I'm trying hard not to overthink the off-by-one in the geometric variable, and I would recommend to a less qualified reader to do the same, this off-by-one interpretation maintains the notion of the geometric distribution as the number of trials until success, rather than counting the number of failures until success, though both are fair interpretations. For me, I've personally always been taught the former and thus wish to retain that. 
 
-Now to find the effective window this covers, we shall consider the information as undergoing exponential decay in weight. We shall say that a piece of information is significant if its current weight, $w_k$ remains above $\frac{1-\beta}{e}$. 
+Now to find the _effective window_ this covers, we shall _consider the information as undergoing exponential decay in weight_. We shall say that a piece of information is significant if its current weight, $w_k$ remains above $\frac{1-\beta}{e}$. 
 
 $$\begin{align*} 
 (1-\beta) \beta^k &= \frac{1}{e} (1-\beta) \\
 \beta^k &= \frac{1}{e} \\
 k \ln \beta &= -1 \\
 k &= \frac{-1}{\ln \beta} \\
-k &\approx \frac{1}{1-\beta} \; \; \text{[By Maclaurin Expansion]}
-\end{align*}$$
+k &\approx \frac{1}{1-\beta} \; \; [\text{By Taylor Expansion about } x = 1 ] \end{align*}$$
 Thus, the lag $k$ within which a piece of information remains significant is as given above, giving our proposed 'viewing window'. 
 
-When using exponential averaging, you run into an error for early iterations, whereby if the value of $1- \beta$ is small, then you'll actually run into the issue that it will reduce your values and introduce a systematic underestimate of early values. To rectify this, you could choose to output $\frac{V_t}{1-\beta^t}$ on each iteration, which will turn it into a standard average of the incoming $\theta_i$s. Note, however, that $V_t$ still obeys the proposed formula, you're simply applying a correction filter before returning it. 
+When using exponential averaging, you run into an error for _early iterations_, whereby if the value of $1- \beta$ is small, then you will _introduce a systematic underestimate of early values_. To rectify this, you could choose to output $\frac{V_t}{1-\beta^t}$ on each iteration, which will turn it into a standard average of the incoming $\theta_i$s. 
+
+**Note:** $V_t$ still obeys the proposed formula, you're simply applying a correction algorithm before returning the average. 
 
 ### Momentum
 
@@ -244,7 +245,6 @@ In all cases, we have:
 # Week 3 - Hyperparameter Tuning + Batch Normalisation
 
 This week technically also explores TensorFlow but I don't personally see the pertinence to include code snippets or notes when you'll learn how to use it in the programming assignments, and can have access to the docs. 
-
 ### Hyperparameter Tuning
 
 There is a hierarchy of importance regarding which hyperparameters need tuning, though there are many varieties of intuition on which ones are important to explore. Andrew suggests:
@@ -291,10 +291,9 @@ When using batch-norm on a layer, we can eliminate the bias parameter for that l
 
 A layer in the middle of the network receiving input from the previous layer effectively only sees the features it receives. Everything else behind it might as well be a black-box, relative to it. What happens during training, however, is that as the parameters of the black-box get optimised, there is a covariate shift in the received inputs from the previous layer. Batch normalisation reduces the coupling between the black-box and the parameters the third layer learns, since now the received data will always be constrained (slightly) by its mean and variance, thereby reducing the amount of covariate shift which can occur, by having some stability in the distribution of the output features from the previous layer. 
 
-Batch-normalisation also acts as a slight regularisation method, similar to dropout, by introducing some noise by applying the affine transformation to each hidden layer's activations. You might want to use dropout in cohesion with this. As a slight aside, regularisation effects of dropout are reduced from larger mini-batch sizes. 
+Batch-normalisation _also acts as a slight regularisation method_, similar to dropout, by introducing some noise by applying the affine transformation to each hidden layer's activations. You might want to use dropout in cohesion with this. As a slight aside, regularisation effects of dropout are reduced from larger mini-batch sizes. 
 
-At test-time, you might not have mini-batches to process in parallel. You need a different way to conceive $\mu, \sigma^2$ at each layer. You normally do this by estimating them with an exponentially weighted average across mini-batches. At test-time, you use these averages 
-to fill in for the mean and variance. 
+At test-time, you might not have mini-batches to process in parallel. You need a different way to conceive $\mu, \sigma^2$ at each layer. You normally do this by estimating them with an exponentially weighted average across mini-batches. At test-time, you use these averages to fill in for the mean and variance. 
 
 ### Multi-Class Classifiers
 
@@ -318,9 +317,17 @@ This makes sense, since to minimise the expression, the only thing that can be c
 
 $\text{RTP: } \frac{\partial J}{\partial z^{[l]}} = \hat{y} - y$
 
+First we clarify our definitions:
 $$\begin{align*}
 
-\hat{y} &= \text{softmax}(z) \\ \\
+\hat{y} &= \text{softmax}(z) \\ 
+J &= \frac{1}{m} \sum_i \sum_j y_j \log \hat{y}_j \\
+
+\end{align*}
+$$
+We note that we're taking an element-wise derivative in the definition. 
+
+$$\begin{align*}
 
 \frac{\partial J}{\partial z^{[l]}} &=  \frac{\partial J}{\partial \hat{y}} \cdot  \frac{\partial \hat{y}}{\partial z^{[l]}} \\
 

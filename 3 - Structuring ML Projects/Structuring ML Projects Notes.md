@@ -50,13 +50,31 @@ The same idea applies to your dev/test sets. Overall, if you have high performan
 
 ### Performance
 
-The whole reason we're using deep learning is to try and establish a tool which can exceed human performance. What we observe is the beneath graph:
+The whole reason we're using deep learning is to try and establish a tool which can ideally exceed human performance. What we observe is the beneath graph:
 
-```latex
+```tikz
 \usepackage{pgfplots}
 
+\begin{document}
+\begin{tikzpicture}
 
+\begin{axis}[axis 
+	lines = left, 
+	xlabel = {Development Time},
+	ylabel = {\% Performance},
+	title = {Model Performance over Time}, 
+	xtick = \empty,
+	ytick = \empty,
+	ymax = 0.7
+]
 
+\addplot [domain = 0:4.5, smooth, very thin] {0.5*(1 - e^-x)};
+\addplot [domain = 0:4.5, smooth, dashed] {0.5}; 
+
+\end{axis}
+
+\end{tikzpicture}
+\end{document}
 ```
 
 We note that the gradient is relatively high up until human level competency is reached, and then it starts to flatten, asymptotically tending to a competency threshold which is known as the **Bayes Optimal Error**. Reaching this indicates that you have learned the best possible input to output mapping, which is made difficult due to particularly challenging input data (e.g. blurry images, fuzzy audio). 
@@ -75,7 +93,6 @@ It's an interesting observation to make that ML generally surpasses us on tasks 
 Supervised learning fundamentally assumes (in the spirit of orthogonalisation) that:
 - You can fit the training set well, and can minimise the avoidable bias. To ensure this, train a bigger model, for longer, with better optimisation algorithms, search hyperparameter space thoroughly and consider the architecture. 
 - Fitting the training set well implies that the model generalises well to the dev/test set, minimising the variance. For this, get more data, regularise, modify the hyperparameters. 
-
 
 ### Error Analysis
 
@@ -128,7 +145,7 @@ With sufficient data, you could retrain the entirety of the neural network, desc
 - _Pre-Training:_ Training for the first time for task $A$ to learn a set of initial parameters. 
 - _Fine-Tuning:_ Using the learned parameters from the pre-training as your initialisations, retrain the model on the data for task $B$. 
 
-#### Multi-task Learning
+#### Multi-Task Learning
 
 **Multi-task Learning:** Trying to learn multiple tasks in parallel, with each task hopefully helping all of the other tasks. 
 
