@@ -1,0 +1,26 @@
+/* Inter for body text, Merriweather for headings */
+
+/* Reading mode (preview) */
+.markdown-preview-view p,
+.markdown-preview-view li,
+.markdown-preview-view blockquote,
+.markdown-preview-view pre {
+  font-family: "Inter", sans-serif !important;
+}
+
+/* Editing mode */
+.cm-s-obsidian .cm-line {
+  font-family: "Inter", sans-serif !important;
+}
+
+/* Headings (both preview + edit) */
+.markdown-preview-view h1,
+.markdown-preview-view h2,
+.markdown-preview-view h3,
+.markdown-preview-view h4,
+.markdown-preview-view h5,
+.markdown-preview-view h6,
+.cm-s-obsidian .cm-header {
+  font-family: "Merriweather", serif !important;
+  font-weight: 600 !important; /* 300 = Light, adjust if needed */
+}

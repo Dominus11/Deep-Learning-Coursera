@@ -1,7 +1,12 @@
+## Helpful Resources
 
-## Week 1 - CNNs 
+- [CS231n Course on CNNs](https://cs231n.github.io/convolutional-networks/)
+- [Chapter 9 Convolutional Neural Networks of Deep Learning - Goodfellow, Bengio, Courville](https://www.deeplearningbook.org/)
+- [3B1B's videos on Convolutions](https://www.3blue1brown.com/?v=convolutions)
 
-### Convolutions and Edge Detection
+# Week 1 - CNN Foundations
+
+## Convolutions and Edge Detection
 
 **NB:** You may wish to watch [3B1B's videos on Convolutions](https://www.3blue1brown.com/?v=convolutions)!! They're very informative in building up the idea of what a convolution is. 
 
@@ -31,7 +36,7 @@ $$
 **Q:** What's the problem with this filter?
 	**A**: The problem with this filter is that it gives equal weightings to values further away (the diagonal cells). So you might want to change the exact filter used by making the difference between the corner cells and outer middle cells more stark, such as with _Sobel/Scharr_ filters. Better yet, _let the kernel's entries be parameters to learn_, which can detect edges at the orientation that allows for the most information to be extracted!!
 
-### Upgrades: Padding, Stride, Volume
+## Upgrades: Padding, Stride, Volume
 
 You also run into some problems with the convolution operation:
 - [c] _Shrinking Output:_ $F$ shrinks in dimension relative to $I$. Given an $n \times n$ image and a $k \times k$ kernel, then $F$ has dimension $(n-k+1) \times (n-k+1)$. So you can't repeat this convolution process forever. 
@@ -61,7 +66,7 @@ Another thing you can do is apply multiply filters at once. For example, perform
 	$$(n \times n \times n_{c}) \;\;* \;\;(k \times k \times n_{c})^{n_{f}} \to (n-k+1) \times (n-k+1) \times n_{f}$$
 	The exponential notation on the kernel indicates repeating the operation $n_f$ times in parallel. Here, you have made volumetric data by repeatedly generating planar data. 
 
-### Convolutions in Practice
+## Convolutions in Practice
 
 #### Convolutional Layers
 
@@ -101,12 +106,184 @@ We like ConvNets because of
 - [u] _Parameter Sharing:_ Where the feature detectors/filters can be applied across multiple parts of the image, reducing parameters in this way, and thus tendency to overfit. 
 - [u] _Sparsity of Connections:_ In each layer, the output values depend on a small number of inputs, which also reduces proneness to overfitting. It also allows us to use smaller training sets, reducing the number of parameters even further.
 - [u] Convolutional structures also help boost _translational invariance_, since you're learning the filters from allll across the image rather than just specific regions.
-## Week 2 - Case Studies + Using ConvNets
+# Week 2 - Patterns in ConvNets
+## Case Studies
 
+### Classic Networks
 
+#### LeNet-5
 
-## Week 3 - Detection Algorithms
+Original Paper: [[LeNet-5.pdf|Gradient-based learning applied to document recognition, LeCun et al. 1998]]
+
+Observations:
+- 60K parameters
+- $\uparrow l \implies n_{H}, n_{W}\downarrow \land \; n_{C} \uparrow$
+- Follows the common architecture of `(conv -> pool)^n -> fc -> fc -> output`
+- At the time, people were using $\sigma, \tanh$ non-linearities, rather than ReLu.
+- Whereas nowadays you would match your filters to have the same number of channels as the input, the original LeNet-5 has an unusual way of reducing the number of filters used by mapping which filters look at which block, due to low processing speed back then.
+- LeNet-5 also had non-linearities after pooling
+#### AlexNet
+
+Original Paper: [[AlexNet.pdf|Krizhevsky et al., 2012. ImageNet classification with deep convolutional neural networks]]
+
+Observations:
+- Very similar to LeNet, simply deeper, had more parameters (60M parameters) and the vast ImageNet dataset.
+- Used ReLU activations
+- Trained on multiple GPUs
+- Original AlexNet had a _Local Response Normalisation (LRN)_ layer, which normalises through channels. Not found to have a significant impact though.
+
+#### VGG-16
+
+Original Paper: [[VGG-16.pdf|Simonyan & Zisserman 2015. Very Deep Convolutional Neural Networks for Large-Scale Image Recognition]]
+
+Observations:
+- $f = 3, s = 1, p = \text{``same"}$ for about 16 layers, to give ~138M parameters
+- Quite a simple architecture in following the `(conv -> pool)^n -> (fc)^m -> out` structure. Also very uniform due to the above hyperparameters. 
+- $n_{c}$ kept doubling from 64 to about 512.
+### ResNets (Fill in Intuition)
+
+Original Paper: [[ResNet.pdf|He at al. 2015. Deep Residual Networks for Image Recognition]]
+
+**Residual Block:** A residual block is a sequence of layers where you introduce _shortcuts/skip connections_ between layers. 
+
+For the output of some layer $l$, $a^{[l]}$, you can then directly route this to layer $l+k, k \neq 1$, circumventing the _main path_ that the information usually takes. This will give:
+$$a^{[l+k]} = g(z^{[l+k]}  + a^{[l]})$$
+
+The effect we see in training is as follows:
+
+```tikz
+\usepackage{pgfplots}
+
+\begin{document}
+	\begin{tikzpicture}
+
+		\begin{axis}[
+			axis lines = left,
+			xlabel = {\# Layers},
+			ylabel = {Training Error},
+			xmin = 0,
+			ymin = 0,
+			ymax = 1,
+			xtick = \empty,
+			ytick = \empty
+		]
+		
+		\addplot [domain = 0:3, very thin, smooth, cyan] {e^(-x) + 0.1};
+		\addplot [domain = 0:3, very thin, smooth] { 0.5*(x+0.7) + 1/(0.5*(x+0.7)) -1.6 };
+		
+		
+		\end{axis}
+
+	\end{tikzpicture}
+\end{document}
+
+```
+
+The cyan line is our rough expectation of what should occur in training for a _plain_ network, but the white line is what actually occurs, simply because as you add more layers beyond a certain point, the network just gets harder to train for the optimisation algorithm. Instead, we see the cyan line occur with ResNets!! 
+
+Andrew makes the argument that ResNets work because in a worst case, your network can simply learn the identity function from your previous inputs. I was somewhat unconvinced by that intuition.
+
+### Inception Networks
+
+#### 1x1 Convolutions and Bottleneck Layers
+
+Original Paper: [[Network In Network.pdf|Lin et al. 2014 Network in Network]]
+
+The idea of a $1 \times 1$ convolution may initially seem daft. Functionally, it might sound like you're scaling your input by a constant. However!! That would only be the case for a kernel of 1 channel. 
+
+Instead, if you've got data comprised of multiple channels, then via the CoV operation, you can now reduce the dimension of your data to $n_{f}$ channels, when using $n_{f}$ filters. In other words, you can exploit the fact that CoV permits dimensionality reduction of data, which will allow you to save on computational costs.
+
+We can apply this notion to yield _bottleneck layers_, which compress a high volume input into a lower volume representation, making it faster to compute on. Suppose you wanted to convolve on data of size $28 \times 28 \times 192$, with a $5 \times 5 \times 32$ kernel. You could:
+- Do this directly, which would take $(28 \times 28 \times 32) \times (5 \times 5 \times 192) \approx 1.2 \times 10^8$ multiplications
+- Apply a bottleneck! Compress the $192 \to 16$ first with a $1 \times 1$ convolution. Then apply your kernel. This will now take $(28 \times 28 \times 16)\times(192) + (28 \times 28 \times 32)\times (5 \times 5 \times 16) \approx 1.2 \times 10^7$ multiplications instead!!
+#### Inception Nets
+
+Original Paper: [[Going Deeper With Convolutions.pdf|Szegedy et al. 2014. Going Deeper With Convolutions]]
+
+**Inception Module:** This allows you to combine the power of multiple layers into one, by using them each 'in parallel', and then concatenating the results to build an output comprised of many channels. 
+- This leaves some edge cases whereby if you wanted to use a pooling layer, you would actually need to apply padding first.
+
+An **Inception Net** is an architecture which:
+- Makes use of many of the aforementioned inception modules
+- Has a slightly less linear structure which permits for side branches that can yield 'early outputs'. This has something of a regularising effect by making sure that the early outputs aren't too shoddy themselves
+### Edge Computing
+
+MobileNet V1: [[MobileNets.pdf|Howard et al., 2017, MobileNets: Efficient CNNs for Mobile Vision Applications]]
+MobileNet V2: [[MobileNet V2.pdf|Sandler et al., 2019, Inverted Residuals and Linear Bottlenecks]]
+EfficientNet: [[EfficientNet.pdf|Tan et Le, 2019, EfficientNet: Rethinking Model Scaling For Convolutional Neural Networks]]
+#### Depth-wise Separable Convolutions
+
+**Goal:** _Accelerate inference speeds_, by improving upon our existing convolution algorithm. This is for applications in edge computing, rather than deferring computation to centralised computers.
+
+We shall do so by now _approximating/altering the convolution operator_ into something slightly new and much faster. We will divide this new convolution stage into two phases:
+- **Depthwise Convolution:** This is where we take a regular image $I: n \times n \times n_{c}$, and apply $n_c$ filters $F_{i}: f \times f$ to each layer in a planar fashion to produce output $X: n_{out} \times n_{out} \times n_{c}$. This performs mixing of features within each layer. 
+  
+- **Pointwise Convolution:** We then take $X$ as our new input, and we apply $n_{f}$ pointwise filters $P_i: 1 \times 1 \times n_{c}$ under the CoV operation, to yield our final output $O: n_{out} \times n_{out} \times n_{f}$. This mixes the extracted features between layers.
+
+We end up finding that now inference is $\frac{1}{n_{c}} + \frac{1}{f^2}$ faster than previously.
+
+#### MobileNet
+
+Let `DSC` denote the depthwise separable convolution operation. 
+
+- **MobileNet v1:** `(DSC)^13 -> Pool -> FC -> Softmax`
+- **MobileNet v2:** `(Bottleneck Block)^17 -> Pool -> FC -> Softmax `
+	Residual Connection between `N1, N2`. 
+	Bottleneck block: `N1 -> Expansion -> Depthwise -> Projection -> N2` + Residual(`N1, N2`). 
+
+Let's talk about the upgrade that arrived with V2 especially. The _bottleneck block_ achieves two things:
+- The expansion operation increases the size of representation, learning a richer function
+- When deploying on a mobile device, the projection operation makes the representation smaller again, reducing memory requirements on a constrained device.
+
+#### EfficientNet
+
+If you want to make a CNN more effective, they observe that there are 3 factors to help improve it:
+- $r$ - Image Resolution
+- $d$ - Neural Met's depth
+- $w$ - Width of the layers in the neural net.
+
+Given a certain set of constraints on computational resources depending on the device, the question then becomes: 'How can we rescale these parameters to achieve the best performance?' Your answer can often be found by looking at open source implementations.
+## Application
+
+### Transfer Learning
+
+Often it's the case that you can make effective use of someone else's open source model that is pre-trained already, on a similar task, and then apply [[Structuring ML Projects Notes#Transfer Learning|transfer learning]], with a few tricks:
+-   If you choose to undertake a pre-training regime, what you could do is put all of your training data through all layers except the final ones, _pre-computing the feature vectors and saving them to disk_ to accelerate training, since now you're effectively only training a softmax layer (in a classification context). 
+- If you've got lots of data, then you could choose to undertake a fine-tuning regime where you:
+	- _Freeze fewer layers, or even replace some outright_. In particular, if you have a high volume of data, then you can actually ply the network with more layers on top, effectively training an additional neural network that learns the mapping from feature vectors to outputs.
+	- _Use the entire network as initialisation_ and then train on top of that to adjust the weights to get to the mapping you need.
+
+### Data Augmentation
+
+Data Augmentation solves the problem of not necessarily having enough training data to achieve your task. It generally helps you to abstract the learned representation by eliminating introducing invariants into the data. You can try:
+- **Spatial/Geometric Transformations** 
+- **Random Cropping**
+- **Colour Shifting** 
+
+**Q:** Give some examples of spatial/geometric transformations. 
+	**A:** Mirroring, Shearing, Rotations, Local Warping
+
+**Q:** How do you generally pick the colours used in colour shifting?
+	**A:** You draw them from some random distribution of your choosing. 
+	An extension is _PCA colour augmentation_, described in the AlexNet paper, which tries to preserve the main colours of your image by using PCA to extract what the main colour components are, and then weighting these higher when deriving the colour shifts to be used.
+
+**Q:** What's the motivation of using colour shifting?
+	**A:** This is to introduce invariance under different lighting conditions, which might give rise to slightly different colours that ultimately don't affect the property you're trying to observe.
+
+You may also wish to parallelise the processes of loading/augmenting your data and training on it.
+
+### General Advice
+
+It is a common pattern that the less data you have, the more hand-engineering you need to do, and this requires a fair bit of insight to do successfully.
+
+To succeed on benchmarks and win competitions, you might want to try:
+- **Ensembling:** Train multiple networks in tandem, and then average their outputs. 
+- **Multi-Crop At Test Time:**
+	- This effectively uses our data augmentation techniques in order to give us a larger set of test data, by producing multiple copies of an image, and then taking various crops from each copy. You can then average the results across each crop to give your final result for that image.
+
+You'll generally want to use existing architectures that exist in literature, especially open source implementations. And don't underestimate the power of fine-tuning!!
+# Week 3 - Detection Algorithms
 
 [YoLo v7 Detection Algorithm](https://www.v7labs.com/blog/yolo-object-detection)
 
-## Week 4 - Face Recognition + Neural Style Transfer
+# Week 4 - Face Recognition + Neural Style Transfer

@@ -1,4 +1,4 @@
-### Introduction to ML Strategy
+## Introduction to ML Strategy
 
 We don't want to waste loads of time for marginal improvements on model performance. There are so many ways you could seek to improve your models, and it's so easy to accidentally pick a direction that is fruitless. You need carefully deliberated strategy. 
 
@@ -16,7 +16,7 @@ You want to orthogonalise the things we can do to effect each of these things, w
 - Test Set: Bigger dev set, so that it captures more general ideas
 - Real-World: Change either of the dev set or the cost function to capture the real-world performance better. 
 
-### Goal Setting
+## Goal Setting
 
 #### Metrics
 
@@ -48,7 +48,7 @@ This is an example of orthogonalisation as well, because you're separating out t
 
 The same idea applies to your dev/test sets. Overall, if you have high performance on your metric and dev/test sets which doesn't then correspond to real world performance, you need to realign.
 
-### Performance
+## Performance
 
 The whole reason we're using deep learning is to try and establish a tool which can ideally exceed human performance. What we observe is the beneath graph:
 
@@ -58,8 +58,9 @@ The whole reason we're using deep learning is to try and establish a tool which 
 \begin{document}
 \begin{tikzpicture}
 
-\begin{axis}[axis 
-	lines = left, 
+\begin{axis}[
+	axis lines = left, 
+	ylabel style = {align = left},
 	xlabel = {Development Time},
 	ylabel = {\% Performance},
 	title = {Model Performance over Time}, 
@@ -94,7 +95,7 @@ Supervised learning fundamentally assumes (in the spirit of orthogonalisation) t
 - You can fit the training set well, and can minimise the avoidable bias. To ensure this, train a bigger model, for longer, with better optimisation algorithms, search hyperparameter space thoroughly and consider the architecture. 
 - Fitting the training set well implies that the model generalises well to the dev/test set, minimising the variance. For this, get more data, regularise, modify the hyperparameters. 
 
-### Error Analysis
+## Error Analysis
 
 We are motivated once again by making the most productive efforts. So we'd like to have an error analysis framework that enables us to strategically distribute our efforts to the most pressing matters. 
 
@@ -110,7 +111,7 @@ Some things to consider when correcting dev and test set examples:
 
 **Guideline:** Build your first system quickly, then iterate. This applies more strongly if you have less knowledge about your problem domain.
 
-### Mismatched Dataset Distributions
+## Mismatched Dataset Distributions
 
 Suppose you have very limited data for your domain-specific product, but you have some images from a slightly different, but close enough domain. Then you have two real options:
 - Option 1: _Shuffle all the data in evenly_ and then split your train/dev/test as you would normally. On average, you aren't going to get a high proportion of the domain-specific data in your dev and test sets, meaning you won't be fitting very well to it. 
@@ -127,7 +128,7 @@ So how do we address a data mismatch problem? There aren't many systematic ways.
 
 To the effect of achieving the second one, an interesting approach will be to use _artificial data synthesis_, but you don't want to run into the _problem of synthesising a small subset of the possible data domain_, since you could end up overfitting your model to that. Even if the synthesised data may be indistinguishable to a human, your model will be able to see the differences between the rest of the domain, which results in this overfitting issue.
 
-### Learning from Multiple Tasks
+## Learning from Multiple Tasks
 
 #### Transfer Learning
 
@@ -143,7 +144,7 @@ This is actually very simple to implement in practice:
 
 With sufficient data, you could retrain the entirety of the neural network, described in terms of:
 - _Pre-Training:_ Training for the first time for task $A$ to learn a set of initial parameters. 
-- _Fine-Tuning:_ Using the learned parameters from the pre-training as your initialisations, retrain the model on the data for task $B$. 
+- _Fine-Tuning:_ Using the learned parameters from pre-training as your initialisations, retrain the model on the data for task $B$. 
 
 #### Multi-Task Learning
 
@@ -157,9 +158,9 @@ This is appropriate when:
 - You can train a big enough neural network to do well on all the tasks. 
 
 In practice, Transfer Learning is used a lot more than Multi-task Learning, with the main exception being the field of Computer Vision. 
-### End-to-end Deep Learning
+## End-to-End Deep Learning
 
-**End-to-end Deep Learning:** This replaces a multi-stage machine learning/data pipeline with one large neural network that can perform the entire task. 
+**End-to-End Deep Learning:** This replaces a multi-stage machine learning/data pipeline with one large neural network that can perform the entire task. 
 
 This approach only really shines with huge amounts of data, on the order of 10,000 - 100000h. There are intermediate versions depending on the scale of data available, which vary the scale of decomposition, like these:
 
