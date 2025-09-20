@@ -3,6 +3,7 @@
 - [CS231n Course on CNNs](https://cs231n.github.io/convolutional-networks/)
 - [Chapter 9 Convolutional Neural Networks of Deep Learning - Goodfellow, Bengio, Courville](https://www.deeplearningbook.org/)
 - [3B1B's videos on Convolutions](https://www.3blue1brown.com/?v=convolutions)
+- [[A Guide To Convolution Arithmetic for DL.pdf]]
 
 # Week 1 - CNN Foundations
 
@@ -10,7 +11,7 @@
 
 **NB:** You may wish to watch [3B1B's videos on Convolutions](https://www.3blue1brown.com/?v=convolutions)!! They're very informative in building up the idea of what a convolution is. 
 
-**Convolution:** In digital signal processing, an operation on a signal, which allows us to identify features in that signal, by sliding a _kernel_ over your image to yield a _feature map_. Technically speaking, the operation we will see is _cross-correlation_.
+**Convolution:** In digital signal processing, an operation on a signal, which allows us to identify features in that signal, by sliding a _kernel_ over it to yield a _feature map_. Technically speaking, the operation we will see is _cross-correlation_.
 
 We denote the operation as follows:
 $$I * K = F$$
@@ -66,7 +67,7 @@ Another thing you can do is apply multiply filters at once. For example, perform
 	$$(n \times n \times n_{c}) \;\;* \;\;(k \times k \times n_{c})^{n_{f}} \to (n-k+1) \times (n-k+1) \times n_{f}$$
 	The exponential notation on the kernel indicates repeating the operation $n_f$ times in parallel. Here, you have made volumetric data by repeatedly generating planar data. 
 
-## Convolutions in Practice
+## Intro To ConvNets
 
 #### Convolutional Layers
 
@@ -284,6 +285,176 @@ To succeed on benchmarks and win competitions, you might want to try:
 You'll generally want to use existing architectures that exist in literature, especially open source implementations. And don't underestimate the power of fine-tuning!!
 # Week 3 - Detection Algorithms
 
-[YoLo v7 Detection Algorithm](https://www.v7labs.com/blog/yolo-object-detection)
+## Detection Problems
+
+**(Single) Object Localisation:** The task of determining both the presence of an object, the location of that object within an image, and its class. 
+
+Mathematically, this can be formulated as learning a function of the form:
+$$I \to  \mathbb{R}^4 \;\times\; [0,1]^{C+1}$$
+
+In practice, the output of our classifier, $y$, will come from concatenating the output of 2 branches in the network architecture, rather than a sequential topology doing the work:
+- Determining the bounding box for the object we've found 
+- Determining the class of object we've found, or if there was no object at all (from a softmax classifier)
+
+We may then arbitrarily define our loss as follows:
+
+$$\mathcal{L}(y, \hat{y}) = 
+\begin{cases}
+|y-\hat{y}|^2 \;\;\; P = 1 \\ \\
+(P- \hat{P})^2 \;\;\; P = 0
+\end{cases}
+$$
+
+Where $P,\hat{P}$, respectively represent the entries of $y, \hat{y}$ suggesting whether or not an object is present.
+
+**Q:** Why do we divide cases on $y_1$?
+	**A:** In the case where $y_1 = 1$, we need actually measure the quality of locating the object, whereas when $y_1 = 0$, we can treat the other outputs as don't care states, since the network only needs to learn to detect absence, not try to locate and identify something nonexistent.  
+
+**Q:** Suggest another appropriate loss function.
+	**A:** You could maintain the case split, but use a log-loss for the classification entries and MSE, or some other distance based metric, for the bounding box.
+
+**Landmark Detection:** The task of determining the position of pre-determined _landmarks_/key features known to be present in an image. 
+
+We can formulate this mapping as a function of the form:
+$$I \to (\mathbb{R}^2)^L$$
+Where $L$ is the number of known landmarks, and we specify the normalised image coordinates of those landmarks. This finds its application in places like:
+- Augmented Reality, such as Snapchat filters
+- Sign language Interpreters, like one produced by a student at Imperial College London for his final year project. More generally still, you could consider hand gesture interpreters.
+
+**Q:** Explain the notation of the range of the mapping learned.
+	**A:** The $\mathbb{R}^2$ indicates the pairs of $(x,y)$ coordinates for each feature, and then the extra power of $L$ indicates that we have $L$ of these coordinates for $L$ landmarks.
+
+**Object Detection:** This is the most general class of problem, concerned with classifying and locating all objects in an image. We can view it as repeating single object localisation to a fixed point where all objects have been observed. 
+
+The idea now is that we collect a set of objects, which can be denoted as `<class, box>` tuples. We will discuss the techniques for this format of problem in the next section.
+## Detection Techniques
+
+### Sliding Window
+
+This is a more general problem-solving strategy, and the application to a task like this is hopefully obvious. The core idea is that you focus on subsections (of predetermined size) of the image, and for each subsection, use a trained CNN to solve the single-object detection problem in that subsection. You slide your window over the image as you would when performing a convolution over area and use this to collect a set of candidate objects.
+
+However, the problem with this is that we incur inference speeds on the order of the pixel area of the image, and training becomes slow for this same reason. We would like to accelerate the operation more.
+
+### Accelerated Sliding Window
+
+Original Paper: [[OverFeat.pdf|Sermanet et al., 2014. OverFeat: Integrated Recognition, Localization and Detection using Convolutional Networks]]
+
+**Idea For Improvement:** Parallelise the computation of the `<class, box>` set for all the windows, so you no longer have to do any sliding, which would lead to duplicated calculations.
+
+We are going to start to achieve this by _re-expressing `FC` layers as `Conv` layers_. Given a volume which is $n \times n \times n_{c}$, if we want to convert this into an output vector of size $l$, an equivalent representation would be a $1 \times 1 \times l$ tensor, which we know we can achieve by applying a conv layer with $l$ filters, each of size $n \times n$ .
+
+If we want windows of size $w \times w$, then we can simply train a ConvNet which takes in images of that size, and learns filters for images of that size. You may then pass in an image of any size $n \geq w$. 
+
+**Q:** Why does this work?
+	**A:** The reason this works is because the convolution operation slides over the image inherently, so we're effectively deferring the sliding work. 
+
+**Q:** Why is this faster?
+	**A:** This is faster since the convolution operation is designed to reuse local computations (between the kernel and image pixels), and so you're _eliminating redundant computations_. Additionally, the _convolution operator can be parallelised_, unlike your sequential work on iterating over the image, further speeding up the process.
+
+
+### YOLO
+
+Original Paper: [[YOLO.pdf|Redmon et al. You Only Look Once: Unified Real-Time Object Detection]]
+Recent Model: [YoLo v7 Detection Algorithm - v7 Labs](https://www.v7labs.com/blog/yolo-object-detection)
+
+**Goal:** Solve the object detection problem through one pass of a neural network, as a direct regression task, rather than leveraging classification to make a decision.
+
+Vaguely speaking, the YOLO algorithm achieves this by dividing the image up into grid cells, as we did when accelerating the sliding window algorithm, and making _each grid cell responsible for containing the centre of a bounding box_ for some object in the image. 
+
+For _each grid cell, we then wish to output a solution to the object localisation problem_, meaning that our neural network now outputs a volume/tensor which we need to evaluate. This also leads to a wider variety of learnable bounding boxes, rather than the shapes defined by the windows in the sliding window algorithm.
+
+**Q:** How should you try to pick the number of grid cells you divide into?
+	**A:** A recommended number is $19 \times 19$, and the aim should be to ensure that you don't have two objects centred in the same cell.
+
+**Q:** How are details about the bounding box typically defined?
+	**A:** The centre of the bounding box is written in coordinates of the grid cell it's contained within, with the top-left being the origin and the bottom-right being $(1,1)$. The size of the bounding box is then also expressed in coordinates of that grid cell. 
+
+**Q:** Formally denote the mapping learned.
+	**A:** For a grid of size $p \times p$, the mapping learned is now of the form: $$ f_{\theta}: I \to (\mathbb{R}^4 \;\times\; [0,1]^{C+1})^{p \times p}$$
+	Plainly, we now output $p^2$ of the vectors learned in the object localisation problem. 
+
+**Intersection Over Union (IoU):** A metric which takes the two potential regions and measures the ratio of the area of their intersection against the area of their union.
+
+**Q:** Describe the two ways in which we can use this metric.
+	**A:** We can use it as an evaluation metric on the bounding boxes our model predicts, and we can use it to learn good bounding boxes in the first place. 
+
+**Non-Max Suppression (NMS):** A technique to eliminate duplicated predictions across different cells by only yielding the one with the highest confidence score (The aforementioned $P$ entry in the output vector per-cell). 
+- Prune any boxes whose confidence scores are beneath $0.6$. This threshold is arbitrary, but the principle is to just quickly eliminate non-viable solutions. 
+- Until there are no boxes remaining, yield the box $S$ with the highest confidence score, and then discard any boxes $B$ s.t. $\text{IoU}(B,S) \geq 0.5$. 
+
+**Q:** Justify why the algorithm works. No formal proof is required. 
+	**A:** NMS greedily finds the boxes that have the highest confidence rating, and then to facilitate de-duplication, will remove any boxes that have a noticeable IoU with that box such as to avoid giving any extra output boxes for the same object. A good analogy would be trying to perform a greedy set cover!
+
+**Anchor Boxes:** A technique to handle the presence of multiple objects of different shapes existing in the same grid cell. They are predefined shapes that we choose to use to bound different types of objects that can be found in the same vicinity. 
+
+**Q:** How do we augment the learned mapping to account for anchor boxes?
+	**A:** Given $B$ available anchor boxes, we now include $B$ copies of the $P$ and bounding box entries for a given type of anchor. When training the model, we consider the properties of irrelevant anchor boxes as don't cares.
+
+**Q:** Denote this formally.
+	**A:** For $B$ classes of anchor boxes, we now learn a mapping: $$ f_{\theta}: I \to ( (\mathbb{R}^4 \times [0,1])^B \;\times\; [0,1]^C)^{p \times p}$$ 
+
+**Q:** Describe an advanced technique to select the bounding boxes. 
+	**A:** K-Means selection. This leverages unsupervised learning techniques to learn the most frequently appearing anchor boxes that fit the data best, and you can then use these to learn appropriate boxes.
+
+**YOLO:** An end to end algorithm solving the object detection problem.
+- Divide our image into grid cells, and pass it through a ConvNet which will yield an output volume describing the
+
+### Region Proposal (Optional)
+
+**R-CNN:** First, you run a _segmentation algorithm_, which suggests candidate regions (not necessarily rectangular or anything in nature) which objects could be found in. You can then run a CNN on each of the suggested regions, to get the solution to object localisation.
+
+**Fast R-CNN:** Propose regions and then use a convolutional implementation of sliding window to check the regions. 
+
+**Faster R-CNN:** Use a CNN to propose regions.
+
+### U-Nets
+
+Original Paper: [[U-Net.pdf|Ronneberger et al. U-Net: Convolutional Networks for Biomedical Image Segmentation]]
+#### Semantic Segmentation
+
+**Semantic Segmentation:** The problem of taking an image and colouring _every_ pixel in terms of the object in which that pixel is contained.
+
+**Q:** In what fields can we find the semantic segmentation problem?
+ - Self-Driving Cars: The different classes might include the road, other cars, humans, and you can use this to inform navigation decisions.
+ - Medicine: For example, it could be used in tumour detection by taking MRI scans and colouring the regions affected by a tumour, which would help doctors locate and prepare to operate on it with a higher degree of accuracy and precision.
+#### Transpose Convolutions
+
+**NB:** This is a slightly unintuitive concept because Andrew only really explains it on one example so you may find yourself in limbo over it. I found extra reading to be a necessity. 
+
+Targeted Reading: 
+- [Kuan Wei - Understand Transposed Convolutions](https://medium.com/data-science/understand-transposed-convolutions-and-build-your-own-transposed-convolution-layer-from-scratch-4f5d97b2967)
+- [Aqeel Anwar - What Is Transposed Convolutional Layer?](https://towardsdatascience.com/what-is-transposed-convolutional-layer-40e5e6e31c11/)
+- [[A Guide To Convolution Arithmetic for DL.pdf#page=19|Transposed Convolutions]]
+
+**Goal:** _Upsample images_, i.e., take images and increase their dimensions again. We will make use of this in the U-Net architecture.
+
+The transpose convolution is an operation which takes:
+- $I$ - input image
+- $K$ - Kernel
+- $s$ - Stride
+- $p$ - Padding
+
+There are 2 ways of approaching this which lead to the same result:
+- Build up intermediate tensors that represent mapping the kernel onto subsections of the feature map (as one would in a convolution), and then broadcasting elements from the input image onto those parts of the kernel and convolving (explained in the course).
+- Upsample the input image by spacing out its elements with zeroes, pad it with more zeroes, perform a normal convolution with a stride of length wrong.
+
+Both of these approaches seem to be described in the last of the targeted readings given above, so I will let that do its job.
+#### U-Net Architecture
+
+![](https://media.geeksforgeeks.org/wp-content/uploads/20220614121231/Group14.jpg)
+
+_Credits to GeeksForGeeks for the image_
+
+The first half of the valley, intends to extract the high level features of the image such that it can classify the objects in it, using the regular `conv -> pool` framework. Intuitively speaking, this learns what determines each class of object, as in any conv net.
+
+The second half of the valley then maps these high level features back onto the original image by attempting to reconstruct and recolour it. This is achieved by two cohesive components:
+- Transpose Convolutions
+- Skip Connections coming from the respective side of the valley.
+
+**Q:** What do each of these components achieve?
+	- The transpose convolutions progressively upscale the image back to its original size
+	- The skip connections to the other side of the valley slowly restore spatial information of the image, blending it with the high level classification data to increase the resolution of where certain classes of object lie down to the pixel level.
+
+At the top of the valley, you yield an output image where each pixel in each channel contains the probability of the pixel representing that class. To get the final segment map, you perform a $1\times1$ convolution, to force the number of channels to equal the classes available, into an `argmax` which then picks the class most likely represented by the pixel.
 
 # Week 4 - Face Recognition + Neural Style Transfer

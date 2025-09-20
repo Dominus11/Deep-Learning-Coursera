@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "ae4832bbe98adc18",
+        "id": "0d8d855b786f8f8b",
         "type": "tabs",
         "children": [
           {
-            "id": "2a747c1f03df22d0",
+            "id": "8bfdd64fd45a08e0",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -22,17 +22,27 @@
             }
           },
           {
-            "id": "61c6dbda9d541d97",
+            "id": "56fdf655a8b73678",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
-                "mode": "source",
-                "source": false
+                "file": "4 - Convolutional Neural Networks/Model Papers/U-Net.pdf"
               },
-              "icon": "lucide-file",
-              "title": "Structuring ML Projects Notes"
+              "icon": "lucide-file-text",
+              "title": "U-Net"
+            }
+          },
+          {
+            "id": "7d906a8aec09236e",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "4 - Convolutional Neural Networks/A Guide To Convolution Arithmetic for DL.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "A Guide To Convolution Arithmetic for DL"
             }
           }
         ]
@@ -183,31 +193,31 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "2a747c1f03df22d0",
+  "active": "8bfdd64fd45a08e0",
   "lastOpenFiles": [
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/models/resnet50.index",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/models/resnet50.data-00000-of-00001",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/models/checkpoint",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/vanishing_grad_kiank.png",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/skip_connection_kiank.png",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/signs_data_kiank.png",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/sant1.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/resnet_kiank.png",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/my_image_5.jpeg",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/my_image_3.jpeg",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/my_image_1.jpeg",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/my_image.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/images/idblock3_kiank.png",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/datasets/train_signs.h5",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/datasets/test_signs.h5",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/__pycache__/test_utils.cpython-38.pyc",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/__pycache__/resnets_utils.cpython-38.pyc",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/__pycache__/public_tests.cpython-38.pyc",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/__pycache__/outputs.cpython-38.pyc",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/test_utils.py",
-    "4 - Convolutional Neural Networks/Assignments/W2A1/W2A1/resnets_utils.py",
-    "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064421.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064420.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064419.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064418.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064417.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064416.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064415.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064414.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064413.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064412.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064410.png",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/__pycache__/test_utils.cpython-38.pyc",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/__pycache__/outputs.cpython-38.pyc",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraMask",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/test_utils.py",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/outputs.py",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/images",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/data",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/__pycache__",
+    "4 - Convolutional Neural Networks/Assignments/W3A2/Image_segmentation_Unet_v2.ipynb",
     "4 - Convolutional Neural Networks/CNNs Notes.md",
+    "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
     "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
     "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
     "README.md",
