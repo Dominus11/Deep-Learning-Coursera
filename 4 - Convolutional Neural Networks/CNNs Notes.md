@@ -107,7 +107,7 @@ We like ConvNets because of
 - [u] _Parameter Sharing:_ Where the feature detectors/filters can be applied across multiple parts of the image, reducing parameters in this way, and thus tendency to overfit. 
 - [u] _Sparsity of Connections:_ In each layer, the output values depend on a small number of inputs, which also reduces proneness to overfitting. It also allows us to use smaller training sets, reducing the number of parameters even further.
 - [u] Convolutional structures also help boost _translational invariance_, since you're learning the filters from allll across the image rather than just specific regions.
-# Week 2 - Patterns in ConvNets
+# Week 2 - Ideas in ConvNets
 ## Case Studies
 
 ### Classic Networks
@@ -457,4 +457,110 @@ The second half of the valley then maps these high level features back onto the 
 
 At the top of the valley, you yield an output image where each pixel in each channel contains the probability of the pixel representing that class. To get the final segment map, you perform a $1\times1$ convolution, to force the number of channels to equal the classes available, into an `argmax` which then picks the class most likely represented by the pixel.
 
-# Week 4 - Face Recognition + Neural Style Transfer
+# Week 4 - Special Applications
+
+## Face Recognition
+
+### Face Tasks
+
+**Face Recognition:** The task of taking in a face image $I$ and determine if it matches any image belonging to a database of $K$ members. This is often thought of as a $1:K$ problem. 
+**Face Verification:** The task of taking in a face image $I$ and determining if it matches the face of a known individual.
+**Liveness Detection:** Presented a face image, this is the task of determining if that face is live or if it is merely a picture.
+
+**One-Shot Learning:** Generally speaking, this is the task of learning a mapping from only seeing one example of every possible output case.
+
+**Q:** Explain the salience of one-shot learning to a face verification problem. 
+	**A:** Consider an employee joining a company. You won't be able to get multiple sufficiently distinct images of them to train on when they join, at least not without inconveniencing them or their privacy. You'll instead get one photo which has to be used as a reference each time.
+
+One approach to this would be to try and train a regular CNN under a $K+1$ classification scheme, where there are $K$ classes per person and one class to indicate that the viewed person doesn't belong to the database.
+
+**Q:** What are the problems with this scheme?
+	- You need to consider what you'd do if more people got added to the database/were removed. Fine tuning doesn't seem sensible. 
+	- The training set won't be robust/dense enough to get sufficient learning.
+
+**Q:** What is the conventional approach to improve on this?
+	**A:** Learn a similarity function, $d: I \times I \to \mathbb{R}$, which takes two images and returns a scalar indicating their similarity. 
+
+### Techniques
+
+**Siamese Network:** For a given image $X \in I$ you output a feature vector, length $n$, captured in the latest layer of your network. A Siamese Network will learn parameters $\theta$ encoding a mapping of the form:
+$$f_{\theta}: I \to \mathbb{R}^n$$
+Such that for pairs of similar images $x^{(i)}, x^{(j)}$, $d(x^{(i)}, x^{(j)}) := ||f(x^{(i)}) - f(x^{(j)})||^2$ is minimised, and for dissimilar images, it is maximised. 
+
+Suppose we have three images $A,P,N$, which we shall respectively call:
+- _Anchor_- A reference image which we are trying to learn to match
+- _Positive_ - A positive match with the person in the image
+- _Negative_ - A negative match with the person in the image
+
+We then have a necessary condition for any optimal distance function $d$ that:
+
+$$d(A,P) \leq d(A,N) $$
+
+We might want to use this to inform a loss function such as:
+
+$$\mathcal{L}(A,P,N) = \max(d(A,P) - d(A,N),0)$$
+
+**Q:** What is the problem with this loss and how do we overcome it?
+	This loss is susceptible to learning the pathological case of $f(x) = 0$ for any $x \in I$. We can mitigate this by introducing a hyperparameter $\alpha$, the margin (terminology from SVMs), which forces the two distance functions to be some magnitude apart.
+
+**Triplet Loss:** Taking $d$ to be defined as in a Siamese network, the triplet loss is defined as
+$$\mathcal{L}(A,P,N) = \max(d(A,P) - d(A,N) + \alpha,0)$$
+
+**Q:** What problems can this run into?
+	If you pick triplets randomly, you're very likely to run into dissimilar images, with,  $d(A,P) \leq d(A,N)$, meaning that the neural network doesn't need to really learn  anything. Therefore you need to pick the triplets effectively, so you get $d(A,P) \approx d(A,N)$, meaning that you learn the decision boundary to a higher resolution.
+
+You could also frame the face verification problem as _binary classification_ on the differences between the vectors. Given the feature vector $f(x)$ for image $x$, you could then consider an output like so:
+$$\hat{{y}} = \sigma(\sum_{k=1}^n w_{k} |f(x^{i})_{k} - f(x^{j})_{k}| \;  + b)$$
+The input could also be the $\chi^2$ similarity index. 
+
+**Q:** Suggest a way to accelerate inference at deploy time
+	**A:** Precompute embeddings from database before deployment and then store them to be compared. At deployment, only perform inference on the fresh images that are being provided/verified.
+
+## Neural Style Transfer
+
+### Basic Task
+
+**Neural Style Transfer:** Given two images $C,S$, generate an image $G$ which emulates the content of $C$ in the style of $S$. 
+
+To perform this task, it is helpful to understand what ConvNets are learning at progressive layers. The general trend we find is that earlier layers learn simple features, and as you get deeper in, these features cascade together to learn features of higher complexity/variety. This is summarised in the paper: [[Visualising and Understanding Convolutional Networks.pdf]]
+
+### Methodology
+
+Paper: [[Style Transfer.pdf|Gatys et al. A Neural Algorithm Of Artistic Style]]
+
+Our approach will start by randomly initialising $G$, and then we can use gradient descent to minimise $\mathcal{J}(G)$, our cost function. In other words, we are not learning the parameters of a neural net, but optimising the individual pixels of $G$. 
+
+$$\mathcal{J}(G) := \alpha\mathcal{J}_{\text{{content}}}(G,C) + \beta\mathcal{J}_{\text{{style}}}(G,S)$$
+
+The two hyperparameters $\alpha,\beta$ are simply what the authors went for, so let's follow suit.
+
+
+**Content Cost:** A measure of similarity of content between two images. Suppose we use some pre-trained ConvNet to process images $C,G$. At some layer $l$, each image will have activations $a^{[l](C)}, a^{[l](G)}$. 
+$$\mathcal{J}_{\text{content}} := \lvert \lvert a^{[l](C)} - a^{[l](G)} \rvert  \rvert^2 $$
+
+This incentivises the algorithm to learn two images which are similar in the features recognised by the conv net. 
+
+**Style:** If using the activation of some layer $l$, we say the style is the correlation between activations across channels.
+
+Let $a^{[l]}_{i,j,k}$ be the activation at layer $l$ in pixel+channel $(i,j,k)$. 
+Let $G^{[l](S)}$ be the _style matrix_, of dimension $n_{c}^{[l]} \times n_{c}^{[l]}$. 
+
+$$G_{kk'}^{[l](S)} = \sum_{i,j} a_{ijk}^{[l](S)}a_{ijk'}^{[l](S)} $$
+We can also define a similar form for image $G$. 
+
+**NB:** This is also known as a _gram matrix_ in linear algebra, whereby given a set of $m$ vectors, $G_{ij} = v_{i}^\intercal v_{j}$. I.e. it measures all the pairwise dot products, which we know indicates cosine similarity if the vectors are normalised.
+
+_Observation:_ This is very similar to the covariance formula, only instead of normalising the means of the variables you simply take the expectation of their product immediately, hence it is unsurprising that this measures correlation between channels. 
+
+**Style Cost:** A measure of similarity of style between two images.
+
+$$\mathcal{J}_{\text{style}}(S,G) :=  \sum_{l} \frac{\lambda^{[l]}}{2n^{[l]}_{H}n^{[l]}_{W}n^{[l]}_{C}}\lvert \lvert G^{[l](S)} - G^{[l](G)} \rvert  \rvert^2_{2} $$
+
+In other words, we are taking an average, weighted across the layers of the neural network, of the Frobenius norms of the differences in similarities across different channels for both $S$ and $G$'s activations at that point in the network. That's a mouthful but, intuitively, you're making sure that at each level, the style is maintained.
+
+## Convolutions in Multiple Dimensions
+
+The general idea is that you have to convolve with a kernel of the same rank as the input data:
+- For the 1D case I refer you once again to 3B1B's video (see [[#Helpful Resources]]). This has applications in signals processing and probability
+- In 3D, you can convolve by striding across all 3 dimensions with a cubic kernel, applying the same dimension reduction formulae as before across all 3 dimensions.
+- You can also emulate the Convolution over Volume operation in higher dimensions, using multiple kernels to change the last dimension present in your data.

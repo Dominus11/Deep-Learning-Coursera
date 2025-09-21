@@ -22,27 +22,27 @@
             }
           },
           {
-            "id": "56fdf655a8b73678",
+            "id": "cd825acbca2445e1",
             "type": "leaf",
             "state": {
               "type": "pdf",
               "state": {
-                "file": "4 - Convolutional Neural Networks/Model Papers/U-Net.pdf"
+                "file": "4 - Convolutional Neural Networks/Model Papers/Style Transfer.pdf"
               },
               "icon": "lucide-file-text",
-              "title": "U-Net"
+              "title": "Style Transfer"
             }
           },
           {
-            "id": "7d906a8aec09236e",
+            "id": "e9dd3bac04f62bd3",
             "type": "leaf",
             "state": {
               "type": "pdf",
               "state": {
-                "file": "4 - Convolutional Neural Networks/A Guide To Convolution Arithmetic for DL.pdf"
+                "file": "4 - Convolutional Neural Networks/Visualising and Understanding Convolutional Networks.pdf"
               },
               "icon": "lucide-file-text",
-              "title": "A Guide To Convolution Arithmetic for DL"
+              "title": "Visualising and Understanding Convolutional Networks"
             }
           }
         ]
@@ -195,28 +195,28 @@
   },
   "active": "8bfdd64fd45a08e0",
   "lastOpenFiles": [
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064421.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064420.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064419.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064418.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064417.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064416.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064415.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064414.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064413.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064412.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB/064410.png",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/__pycache__/test_utils.cpython-38.pyc",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/__pycache__/outputs.cpython-38.pyc",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraRGB",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data/CameraMask",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/test_utils.py",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/outputs.py",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/images",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/data",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/__pycache__",
-    "4 - Convolutional Neural Networks/Assignments/W3A2/Image_segmentation_Unet_v2.ipynb",
+    "4 - Convolutional Neural Networks/Model Papers/Style Transfer.pdf",
     "4 - Convolutional Neural Networks/CNNs Notes.md",
+    "4 - Convolutional Neural Networks/Course Certificate.pdf",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/pretrained-model/vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/pretrained-model/imagenet-vgg-verydeep-19.mat",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_750.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_500.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_2500.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_250.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_2250.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_2000.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_1750.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_1500.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_1250.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_1000.jpg",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/__pycache__/public_tests.cpython-38.pyc",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/Art_Generation_with_Neural_Style_Transfer.ipynb",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/pretrained-model",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/public_tests.py",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/output",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/nst_utils.py",
+    "4 - Convolutional Neural Networks/Assignments/W4A2/images",
     "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
     "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
     "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
