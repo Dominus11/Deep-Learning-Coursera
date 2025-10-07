@@ -397,7 +397,7 @@ For _each grid cell, we then wish to output a solution to the object localisatio
 	**A:** K-Means selection. This leverages unsupervised learning techniques to learn the most frequently appearing anchor boxes that fit the data best, and you can then use these to learn appropriate boxes.
 
 **YOLO:** An end to end algorithm solving the object detection problem.
-- Divide our image into grid cells, and pass it through a ConvNet which will yield an output volume describing the
+- Divide our image into grid cells, and pass it through a ConvNet which will yield an output volume describing the locations of distinct objects in an image. 
 
 ### Region Proposal (Optional)
 

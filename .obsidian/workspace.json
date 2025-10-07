@@ -8,41 +8,17 @@
         "type": "tabs",
         "children": [
           {
-            "id": "8bfdd64fd45a08e0",
+            "id": "bd1aa0a0acf3667b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "4 - Convolutional Neural Networks/CNNs Notes.md",
+                "file": "5 - Sequence Models/Sequence Models Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CNNs Notes"
-            }
-          },
-          {
-            "id": "cd825acbca2445e1",
-            "type": "leaf",
-            "state": {
-              "type": "pdf",
-              "state": {
-                "file": "4 - Convolutional Neural Networks/Model Papers/Style Transfer.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "Style Transfer"
-            }
-          },
-          {
-            "id": "e9dd3bac04f62bd3",
-            "type": "leaf",
-            "state": {
-              "type": "pdf",
-              "state": {
-                "file": "4 - Convolutional Neural Networks/Visualising and Understanding Convolutional Networks.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "Visualising and Understanding Convolutional Networks"
+              "title": "Sequence Models Notes"
             }
           }
         ]
@@ -193,34 +169,35 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "8bfdd64fd45a08e0",
+  "active": "bd1aa0a0acf3667b",
   "lastOpenFiles": [
-    "4 - Convolutional Neural Networks/Model Papers/Style Transfer.pdf",
+    "5 - Sequence Models/Assignments/W1A1/images/rnn_step_forward_figure2_v3a.png",
+    "5 - Sequence Models/Assignments/W1A1/images/rnn_step_forward.png",
+    "5 - Sequence Models/Assignments/W1A1/images/rnn_forward_sequence_figure3_v3a.png",
+    "5 - Sequence Models/Assignments/W1A1/images/rnn_cell_backward_3a_c.png",
+    "5 - Sequence Models/Assignments/W1A1/images/rnn_cell_backward_3a_4.png",
+    "5 - Sequence Models/Assignments/W1A1/images/rnn_cell_backprop.png",
+    "5 - Sequence Models/Assignments/W1A1/images/rnn_backward_overview_3a_1.png",
+    "5 - Sequence Models/Assignments/W1A1/images/old_rnn_cell_backward_3a_c.png",
+    "5 - Sequence Models/Assignments/W1A1/images/initial_state.png",
+    "5 - Sequence Models/Assignments/W1A1/images/RNN.png",
+    "5 - Sequence Models/Assignments/W1A1/images/LSTM_rnn.png",
+    "5 - Sequence Models/Assignments/W1A1/__pycache__/rnn_utils.cpython-38.pyc",
+    "5 - Sequence Models/Assignments/W1A1/__pycache__/rnn_utils.cpython-37.pyc",
+    "5 - Sequence Models/Assignments/W1A1/__pycache__/public_tests.cpython-37.pyc",
+    "5 - Sequence Models/Assignments/W1A1/utils.py",
+    "5 - Sequence Models/Assignments/W1A1/test_utils.py",
+    "5 - Sequence Models/Assignments/W1A1/rnn_utils.py",
+    "5 - Sequence Models/Assignments/W1A1/public_tests.py",
+    "5 - Sequence Models/Assignments/W1A1/images",
+    "5 - Sequence Models/Assignments/W1A1/generateTestCases.py",
+    "5 - Sequence Models/Assignments/W1A1/__pycache__",
     "4 - Convolutional Neural Networks/CNNs Notes.md",
-    "4 - Convolutional Neural Networks/Course Certificate.pdf",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/pretrained-model/vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/pretrained-model/imagenet-vgg-verydeep-19.mat",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_750.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_500.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_2500.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_250.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_2250.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_2000.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_1750.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_1500.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_1250.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output/image_1000.jpg",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/__pycache__/public_tests.cpython-38.pyc",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/Art_Generation_with_Neural_Style_Transfer.ipynb",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/pretrained-model",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/public_tests.py",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/output",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/nst_utils.py",
-    "4 - Convolutional Neural Networks/Assignments/W4A2/images",
-    "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
+    "5 - Sequence Models/Sequence Models Notes.md",
     "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
-    "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
     "README.md",
+    "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
+    "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
     "Welcome.md"
   ]
 }
