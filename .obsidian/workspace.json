@@ -20,6 +20,18 @@
               "icon": "lucide-file",
               "title": "Sequence Models Notes"
             }
+          },
+          {
+            "id": "ce6ac410043fe3a0",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "5 - Sequence Models/Model Papers/Bahdanau et al - Neural Machine Translation.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Bahdanau et al - Neural Machine Translation"
+            }
           }
         ]
       }
@@ -171,33 +183,32 @@
   },
   "active": "bd1aa0a0acf3667b",
   "lastOpenFiles": [
-    "5 - Sequence Models/Assignments/W1A1/images/rnn_step_forward_figure2_v3a.png",
-    "5 - Sequence Models/Assignments/W1A1/images/rnn_step_forward.png",
-    "5 - Sequence Models/Assignments/W1A1/images/rnn_forward_sequence_figure3_v3a.png",
-    "5 - Sequence Models/Assignments/W1A1/images/rnn_cell_backward_3a_c.png",
-    "5 - Sequence Models/Assignments/W1A1/images/rnn_cell_backward_3a_4.png",
-    "5 - Sequence Models/Assignments/W1A1/images/rnn_cell_backprop.png",
-    "5 - Sequence Models/Assignments/W1A1/images/rnn_backward_overview_3a_1.png",
-    "5 - Sequence Models/Assignments/W1A1/images/old_rnn_cell_backward_3a_c.png",
-    "5 - Sequence Models/Assignments/W1A1/images/initial_state.png",
-    "5 - Sequence Models/Assignments/W1A1/images/RNN.png",
-    "5 - Sequence Models/Assignments/W1A1/images/LSTM_rnn.png",
-    "5 - Sequence Models/Assignments/W1A1/__pycache__/rnn_utils.cpython-38.pyc",
-    "5 - Sequence Models/Assignments/W1A1/__pycache__/rnn_utils.cpython-37.pyc",
-    "5 - Sequence Models/Assignments/W1A1/__pycache__/public_tests.cpython-37.pyc",
-    "5 - Sequence Models/Assignments/W1A1/utils.py",
-    "5 - Sequence Models/Assignments/W1A1/test_utils.py",
-    "5 - Sequence Models/Assignments/W1A1/rnn_utils.py",
-    "5 - Sequence Models/Assignments/W1A1/public_tests.py",
-    "5 - Sequence Models/Assignments/W1A1/images",
-    "5 - Sequence Models/Assignments/W1A1/generateTestCases.py",
-    "5 - Sequence Models/Assignments/W1A1/__pycache__",
-    "4 - Convolutional Neural Networks/CNNs Notes.md",
+    "5 - Sequence Models/Model Papers/Bahdanau et al - Neural Machine Translation.pdf",
     "5 - Sequence Models/Sequence Models Notes.md",
-    "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
-    "README.md",
+    "5 - Sequence Models/Model Papers/Cho et al Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation.pdf",
+    "5 - Sequence Models/Model Papers/Attention is All You Need.pdf",
+    "5 - Sequence Models/Model Papers/Unconfirmed 432022.crdownload",
+    "5 - Sequence Models/Model Papers/BLEU- A Method for Automatic Evaluation of Machine Translation.pdf",
     "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
+    "4 - Convolutional Neural Networks/CNNs Notes.md",
+    "5 - Sequence Models/Model Papers/Sequence To Sequence Learning With Neural Networks.pdf",
+    "5 - Sequence Models/Model Papers/Unconfirmed 913120.crdownload",
+    "5 - Sequence Models/Model Papers/Bolukbasi et al. Man is to Computer Programmer, as Woman is to Homemaker.pdf",
+    "5 - Sequence Models/Model Papers/On the Properties of Neural Machine Translation.pdf",
+    "5 - Sequence Models/Model Papers/LSTMs.pdf",
+    "5 - Sequence Models/Assignments/W2A2/images/woebot.png",
+    "5 - Sequence Models/Assignments/W2A2/images/image_1.png",
+    "5 - Sequence Models/Assignments/W2A2/images/emojiss.png",
+    "5 - Sequence Models/Assignments/W2A2/images/emojify_model.png",
+    "5 - Sequence Models/Assignments/W2A2/images/emojifierv1.png",
+    "5 - Sequence Models/Assignments/W2A2/images/emojifier-v2.png",
+    "5 - Sequence Models/Assignments/W2A2/images/emo_model.png",
+    "5 - Sequence Models/Assignments/W2A2/images/embedding1.png",
+    "5 - Sequence Models/Assignments/W2A2/images/emb_kiank.png",
+    "5 - Sequence Models/Assignments/W2A2/images/dataset_kiank.png",
+    "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
     "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
+    "README.md",
     "Welcome.md"
   ]
 }

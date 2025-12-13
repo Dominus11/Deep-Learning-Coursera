@@ -182,7 +182,7 @@ The effect we see in training is as follows:
 
 The cyan line is our rough expectation of what should occur in training for a _plain_ network, but the white line is what actually occurs, simply because as you add more layers beyond a certain point, the network just gets harder to train for the optimisation algorithm. Instead, we see the cyan line occur with ResNets!! 
 
-Andrew makes the argument that ResNets work because in a worst case, your network can simply learn the identity function from your previous inputs. I was somewhat unconvinced by that intuition.
+ResNets work because in a worst case, your network can simply learn the identity function from your previous inputs, which allows them to stay alive without getting muted by older layers.
 
 ### Inception Networks
 
@@ -318,8 +318,8 @@ Where $P,\hat{P}$, respectively represent the entries of $y, \hat{y}$ suggesting
 We can formulate this mapping as a function of the form:
 $$I \to (\mathbb{R}^2)^L$$
 Where $L$ is the number of known landmarks, and we specify the normalised image coordinates of those landmarks. This finds its application in places like:
-- Augmented Reality, such as Snapchat filters
-- Sign language Interpreters, like one produced by a student at Imperial College London for his final year project. More generally still, you could consider hand gesture interpreters.
+- _Augmented Reality_, such as Snapchat filters
+- _Sign language Interpreters_, like one produced by a student at Imperial College London for his final year project. More generally still, you could consider hand gesture interpreters.
 
 **Q:** Explain the notation of the range of the mapping learned.
 	**A:** The $\mathbb{R}^2$ indicates the pairs of $(x,y)$ coordinates for each feature, and then the extra power of $L$ indicates that we have $L$ of these coordinates for $L$ landmarks.
@@ -481,7 +481,7 @@ One approach to this would be to try and train a regular CNN under a $K+1$ class
 **Q:** What is the conventional approach to improve on this?
 	**A:** Learn a similarity function, $d: I \times I \to \mathbb{R}$, which takes two images and returns a scalar indicating their similarity. 
 
-### Techniques
+### Siamese Networks
 
 **Siamese Network:** For a given image $X \in I$ you output a feature vector, length $n$, captured in the latest layer of your network. A Siamese Network will learn parameters $\theta$ encoding a mapping of the form:
 $$f_{\theta}: I \to \mathbb{R}^n$$
