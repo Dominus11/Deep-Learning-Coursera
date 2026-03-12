@@ -1,3 +1,4 @@
+$$\newcommand{\time}[1]{{\langle #1 \rangle}}$$
 # Week 1 - RNNs
 
 ## Introduction + Concepts
@@ -26,7 +27,7 @@
 **Insert Tikz Diagram Here...**
 
 The forward propagation step for an RNN cell at timestep $t \geq 1, t \in \mathbb{N}$ is given by:
-$$\newcommand{\time}[1]{{\langle #1 \rangle}}$$
+
 $$
 \begin{align*}
 a^{\time{t}} &= g_{a}(W_{aa}a^{\time{t-1}} + W_{ax}x^{\time{t}} + b_{a}) \\
@@ -254,7 +255,7 @@ The structure of the neural network you get will be:
 **Q:** You can generalise this algorithm by broadening the context set you select. Give examples of such sets. 
 	- _Fixed Window:_ Select $l$ tokens before the target and $r$ tokens after the target. 
 	- _Markovian:_ $l = 1, r = 0$. Presume that the target only depends on the previous token. 
-	- 1 nearby word: Randomly sample from within a fixed window.
+	- _1 nearby word:_ Randomly sample from within a fixed window.
 
 
 ### Word2Vec: Skip-Gram
@@ -329,7 +330,6 @@ Where:
 	- Should be 0 for $X_{ij} = 0$, such as to not train from unseen instances.
 	- Non-decreasing, such as to not over-optimise for infrequent relations.
 	- Shouldn't overly weight stop words.
-
 **Q:** Why might you choose to average the $\theta_w, e_w$ vectors at the end of training?
 	**A:** Since $\theta_w, e_w$ are symmetric in the formula, this means that when training occurs, semantic information gets smattered across them each. So in order to restore all the semantic information, you take the linear average of the two (this is a linear model and so it makes sense to take a linear combination).
 
@@ -359,7 +359,7 @@ One school of thought on this is to:
 	**A:** You can try to use a classifier architecture which can tell the difference.
 # Week 3 - Sequence Models and Attention Mechanisms
 
-### Sequence Models
+## Sequence Models
 
 Some candidates domains for this task include:
 - _Machine Translation:_ For a given input sequence in language A, output a new sequence in language B. 
@@ -371,7 +371,7 @@ Some candidates domains for this task include:
 	**A:** You now want to generate the most likely sequence, rather than randomly sampling a language model/distribution, since random sampling can give a bad translation.
 **Q:** Frame machine translation as a probabilistic learning task.
 	**A:** Given an input sequence $a^\time{1}, \dots, a^\time{T_{a}}$ of tokens in language $A$, you now want to find the sequence $b^\time{1}, \dots, b^\time{T_{b}}$ in language $B$ which maximises $\Pr(b^\time{1}, \dots, b^\time{T_{b}} | a^\time{1}, \dots, a^\time{T_{a}})$.  
-#### Beam Search
+### Beam Search
 
 **Goal:** Find the most likely output from a conditional language model, using an approximate searching method. It's like a more selective breadth first search.
 
@@ -396,7 +396,7 @@ Here, $\operatorname{arg-B-}\max$ denotes that at each iteration/timestep, you r
 **Q:** What vulnerability is this algorithm susceptible to? How do you fix it?
 	**A:** Longer sequences are comprised of more tokens, meaning the probability product is longer, and so the probability of those sequences arising is measured as smaller. Therefore, you want to perform _length normalisation_, where you divide by a $T_{y}^\alpha$ term, with $\alpha \approx 0.7$ being a good empirical approximation.
 
-#### Error Analysis
+### Error Analysis
 
 Suppose that you have a human sequence $y^\ast$ and a sequence output by an RNN and beam search $\hat{y}$. To perform error analysis, you want to determine the likelihood of each sequence being output from the RNN. You then get two cases:
 
@@ -413,7 +413,7 @@ Suppose that you have a human sequence $y^\ast$ and a sequence output by an RNN 
 You can then repeat this for multiple output sets, to work out which fraction of errors arise from Beam Search/the decoder. Using this, you can then choose which one needs more tuning. Do you need to increase the beam width, or do further analysis on how to improve the RNN?
 
 
-#### Bleu Score 
+### Bleu Score 
 
 **Goal:** Automatically evaluate quality of machine translation
 
@@ -450,7 +450,7 @@ Therefore, our final Bleu Score formula is:
 
 $$B = K \exp\left( \frac{1}{N} \sum_{n=1}^N P_{n} \right)$$
 
-### Attention Model
+## Attention Model
 
 **Goal:** Shift away from the encoder-decoder model and give neural networks the ability to work with long sentences in fragments at a time, as a human translator might.
 Original Paper: [[Bahdanau et al - Neural Machine Translation.pdf]]
@@ -471,7 +471,7 @@ Use a BRNN (or any such flavour) to process input sequence and generate activati
 	$$c^\time{t_{y}} = \sum_{t_{x}} \alpha^\time{t_{x}, t_{y}} a^\time{t_{x}}$$
 	In other words, you're weighting the different input timesteps ($t_x$) for each new output timestep ($t_y$), to provide a suitable context at each stage, thereby allowing the windowing effect that a human translator would perform.
 
-### Applications: Speech Recognition
+## Applications: Speech Recognition
 
 We can apply the attention model to a sequence model, constraining the input BRNN and output RNN to have the same length. Where we can't identify the phoneme, or nothing is happening, we can include an empty character. 
 
@@ -485,3 +485,15 @@ We can apply the attention model to a sequence model, constraining the input BRN
 
 **NB:** Trigger Word Detection doesn't have a consensus on the 'best' algorithms yet.
 # Week 4 - Transformers
+
+**Goal:** Produce a more parallelisable architecture, rather than the sequence oriented encoder-decoder models we've seen already.
+Original Paper: [[Attention is All You Need.pdf]]
+
+For each word in the vocab, associate a query, key and value, encoded by $Q,K,V$ matrices which act on their embeddings. 
+
+For each word in a given input sequence, calculate its attention score by querying all words in the sentence (including itself)
+Use a softmax to convert this into a probability distribution, and then multiply that matrix with the values matrix, to give an attention matrix. 
+
+Scale in order to reduce variance and enable better convergence.
+
+Repeat with different sets of $W^Q, W^K, W^V$ matrices to be able to ask 'different questions', giving multi-headed attention. Concatenate outputs of heads, and multiply by matrix $W$ to give final output.

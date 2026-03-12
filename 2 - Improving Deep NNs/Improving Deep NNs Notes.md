@@ -113,8 +113,7 @@ In traditional gradient descent, we've already shown you can efficiently compute
 
 **Mini-Batch Gradient Descent:** Take small subsets of your training set and allow gradient descent to occur from training on subsets, rather than waiting for your entire training set to be processed. 
 
-```python
-
+```Python
 parameters = initialise_parameters()
 epochs = ...
 n_batches = ...

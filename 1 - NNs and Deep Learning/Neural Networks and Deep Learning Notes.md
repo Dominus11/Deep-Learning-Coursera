@@ -34,8 +34,8 @@ We shall proceed motivated by the task of _binary classification_. This is an ex
 The task may be framed as such. Given an object $X$ with true binary label $Y$ which can be described by a set of input features $x \in \mathbb{R}^n$, you wish to learn parameters $w \in \mathbb{R}^n, b \in \mathbb{R}$, such that your classifier will output $\hat{y}$ satisfying: 
 
 $$\begin{align*} 
-\sigma(z) = \frac{1}{1+e^{-z}} \; \; \text{[Sigmoid]}\\
-\hat{y} P(Y=1|x) = \sigma(w^Tx + b) \approx P(Y = 1|x)\\
+\sigma(z) &= \frac{1}{1+e^{-z}} \; \; \text{[Sigmoid]}\\
+\hat{y} &= \sigma(w^Tx + b) \approx \mathbb{P}(Y = 1|x)\\
 \end{align*}$$
 
 We use the sigmoid function rather than a linear function to cap the values between 0 and 1, allowing us to determine a probability. 

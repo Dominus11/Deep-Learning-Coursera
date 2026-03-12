@@ -141,7 +141,7 @@ Observations:
 - $f = 3, s = 1, p = \text{``same"}$ for about 16 layers, to give ~138M parameters
 - Quite a simple architecture in following the `(conv -> pool)^n -> (fc)^m -> out` structure. Also very uniform due to the above hyperparameters. 
 - $n_{c}$ kept doubling from 64 to about 512.
-### ResNets (Fill in Intuition)
+### ResNets
 
 Original Paper: [[ResNet.pdf|He at al. 2015. Deep Residual Networks for Image Recognition]]
 
@@ -194,7 +194,9 @@ The idea of a $1 \times 1$ convolution may initially seem daft. Functionally, it
 
 Instead, if you've got data comprised of multiple channels, then via the CoV operation, you can now reduce the dimension of your data to $n_{f}$ channels, when using $n_{f}$ filters. In other words, you can exploit the fact that CoV permits dimensionality reduction of data, which will allow you to save on computational costs.
 
-We can apply this notion to yield _bottleneck layers_, which compress a high volume input into a lower volume representation, making it faster to compute on. Suppose you wanted to convolve on data of size $28 \times 28 \times 192$, with a $5 \times 5 \times 32$ kernel. You could:
+We can apply this notion to yield _bottleneck layers_, which compress a high volume input into a lower volume representation, making it faster to compute on. 
+
+Suppose you wanted to convolve on data of size $28 \times 28 \times 192$, with a $5 \times 5 \times 32$ kernel. You could:
 - Do this directly, which would take $(28 \times 28 \times 32) \times (5 \times 5 \times 192) \approx 1.2 \times 10^8$ multiplications
 - Apply a bottleneck! Compress the $192 \to 16$ first with a $1 \times 1$ convolution. Then apply your kernel. This will now take $(28 \times 28 \times 16)\times(192) + (28 \times 28 \times 32)\times (5 \times 5 \times 16) \approx 1.2 \times 10^7$ multiplications instead!!
 #### Inception Nets
@@ -240,7 +242,7 @@ Let's talk about the upgrade that arrived with V2 especially. The _bottleneck bl
 
 If you want to make a CNN more effective, they observe that there are 3 factors to help improve it:
 - $r$ - Image Resolution
-- $d$ - Neural Met's depth
+- $d$ - Neural Net's depth
 - $w$ - Width of the layers in the neural net.
 
 Given a certain set of constraints on computational resources depending on the device, the question then becomes: 'How can we rescale these parameters to achieve the best performance?' Your answer can often be found by looking at open source implementations.

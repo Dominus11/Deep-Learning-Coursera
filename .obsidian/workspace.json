@@ -13,12 +13,24 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "5 - Sequence Models/Sequence Models Notes.md",
+                "file": "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Sequence Models Notes"
+              "title": "Neural Networks and Deep Learning Notes"
+            }
+          },
+          {
+            "id": "fcb52c63e8c012f9",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "5 - Sequence Models/Model Papers/Attention is All You Need.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Attention is All You Need"
             }
           },
           {
@@ -32,8 +44,23 @@
               "icon": "lucide-file-text",
               "title": "Bahdanau et al - Neural Machine Translation"
             }
+          },
+          {
+            "id": "39aba35d3de4e4a4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "5 - Sequence Models/Sequence Models Notes.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Sequence Models Notes"
+            }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -181,33 +208,33 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "bd1aa0a0acf3667b",
+  "active": "39aba35d3de4e4a4",
   "lastOpenFiles": [
     "5 - Sequence Models/Model Papers/Bahdanau et al - Neural Machine Translation.pdf",
     "5 - Sequence Models/Sequence Models Notes.md",
-    "5 - Sequence Models/Model Papers/Cho et al Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation.pdf",
-    "5 - Sequence Models/Model Papers/Attention is All You Need.pdf",
-    "5 - Sequence Models/Model Papers/Unconfirmed 432022.crdownload",
-    "5 - Sequence Models/Model Papers/BLEU- A Method for Automatic Evaluation of Machine Translation.pdf",
-    "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
     "4 - Convolutional Neural Networks/CNNs Notes.md",
-    "5 - Sequence Models/Model Papers/Sequence To Sequence Learning With Neural Networks.pdf",
-    "5 - Sequence Models/Model Papers/Unconfirmed 913120.crdownload",
-    "5 - Sequence Models/Model Papers/Bolukbasi et al. Man is to Computer Programmer, as Woman is to Homemaker.pdf",
-    "5 - Sequence Models/Model Papers/On the Properties of Neural Machine Translation.pdf",
-    "5 - Sequence Models/Model Papers/LSTMs.pdf",
+    "5 - Sequence Models/Model Papers/Attention is All You Need.pdf",
+    "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
+    "3 - Structuring ML Projects/Structuring ML Projects Notes.md",
+    "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
+    "5 - Sequence Models/Assignments/W4A3_UGL/results/runs/Dec21_12-40-21_4944914902af/1671626422.1444414/events.out.tfevents.1671626422.4944914902af.343.1",
+    "5 - Sequence Models/Assignments/W4A3_UGL/results/runs/Dec21_12-36-59_4944914902af/1671626220.8082364/events.out.tfevents.1671626220.4944914902af.191.1",
+    "5 - Sequence Models/Assignments/W4A3_UGL/results/runs/Dec21_12-33-51_4944914902af/1671626034.2980044/events.out.tfevents.1671626034.4944914902af.43.1",
+    "5 - Sequence Models/Assignments/W4A3_UGL/results/runs/Dec21_12-19-04_26b0b56ecce0/1671625145.7646568/events.out.tfevents.1671625145.26b0b56ecce0.11.1",
+    "5 - Sequence Models/Assignments/W4A3_UGL/results/runs/Dec19_21-38-58_4e5f77928000/1671485940.7834005/events.out.tfevents.1671485940.4e5f77928000.11.1",
+    "5 - Sequence Models/Assignments/W4A3_UGL/results/runs/Dec14_21-30-41_34e94b9eb690/1765747843.3509536/events.out.tfevents.1765747843.34e94b9eb690.97.1",
+    "5 - Sequence Models/Assignments/W4A3_UGL/results/runs/Dec21_12-40-21_4944914902af/events.out.tfevents.1671626433.4944914902af.343.2",
+    "5 - Sequence Models/Assignments/W4A3_UGL/results/runs/Dec21_12-40-21_4944914902af/events.out.tfevents.1671626422.4944914902af.343.0",
+    "5 - Sequence Models/Assignments/W4A4_UGL_POS/preprocessing.png",
+    "5 - Sequence Models/Assignments/W4A1/transformer.png",
+    "5 - Sequence Models/Assignments/W4A1/self-attention.png",
+    "5 - Sequence Models/Assignments/W4A1/encoder_layer.png",
+    "5 - Sequence Models/Assignments/W4A1/encoder.png",
+    "5 - Sequence Models/Assignments/W4A1/decoder_layer.png",
+    "5 - Sequence Models/Assignments/W4A1/decoder.png",
     "5 - Sequence Models/Assignments/W2A2/images/woebot.png",
     "5 - Sequence Models/Assignments/W2A2/images/image_1.png",
     "5 - Sequence Models/Assignments/W2A2/images/emojiss.png",
-    "5 - Sequence Models/Assignments/W2A2/images/emojify_model.png",
-    "5 - Sequence Models/Assignments/W2A2/images/emojifierv1.png",
-    "5 - Sequence Models/Assignments/W2A2/images/emojifier-v2.png",
-    "5 - Sequence Models/Assignments/W2A2/images/emo_model.png",
-    "5 - Sequence Models/Assignments/W2A2/images/embedding1.png",
-    "5 - Sequence Models/Assignments/W2A2/images/emb_kiank.png",
-    "5 - Sequence Models/Assignments/W2A2/images/dataset_kiank.png",
-    "2 - Improving Deep NNs/Improving Deep NNs Notes.md",
-    "1 - NNs and Deep Learning/Neural Networks and Deep Learning Notes.md",
     "README.md",
     "Welcome.md"
   ]
